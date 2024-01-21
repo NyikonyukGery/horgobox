@@ -1,6 +1,10 @@
 <?php
     require_once("./setup.php");
     CheckSession();
+
+    require_once(ROOT_PATH . "/app/database/databaseManager.php");
+    $unlockedBoxes = GetUserBoxes();
+    $lockedBoxes= GetLockedBoxes();
 ?>
 
 <!DOCTYPE html>
@@ -13,7 +17,7 @@
     <meta name="description" content="" />
 
     <!-- style -->
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/style.css">
     <!-- title -->
     <title>Mintáim | Csipcsirip - Horgobox</title>
 </head>
@@ -22,88 +26,61 @@
     <?php require(ROOT_PATH . "/app/includes/navigation.php") ?>
 
     <main>
-        <h1>Mintáim</h1>
+        <div>
+            <h1>Tananyagjaim</h1>
+            <?php if($unlockedBoxes == false){
+                echo('<p id="unlocked-boxes-message">Még nincs feloldott tananyagod!</p>');
+            }
+            ?>
+        </div>
+
+        <div id="unlocked-boxes" class="patterns-container">
+            <?php 
+                if($unlockedBoxes != false){
+                    foreach($unlockedBoxes as $box){
+                        echo('
+                            <div class="pattern">
+                                <div class="img-container">
+                                    <img src="' . BASE_URL . 'assets/images' .$box['image_url'] . '" alt="' . $box['image_title'] . '">
+                                </div>
+                                <div class="description">
+                                    <h2>' . $box['box_name'] . '</h2>
+                                <a href="'. BASE_URL . 'boxok' . $box['box_url'] . '" class="btn">Megnézem</a>
+                                </div>
+                            </div>
+                            ');
+                    }
+                }
+            ?>
+        </div>
+
+        <div>
+            <h1>Feloldatlan tananyagok</h1>
+            <?php if($lockedBoxes == false){
+                echo('<p id="futher-boxes-message">Az összes tananyagot feloldottad már! Hamarosan érkeznek újak!</p>');
+            }
+            ?>
+        </div>
 
         <div class="patterns-container">
-            <div class="pattern">
-                <div class="img-container">
-                    <img src="./assets/images/patterns/renszarvas.jpg" alt="horgolt rénszarvas">
-                </div>
-                <div class="description">
-                    <h2>Rénszarvas</h2>
-                    <a href="./assets/minták/renszarvas.html" class="btn">Megnézem</a>
-                </div>
-            </div>
 
-            <div class="pattern">
-                <div class="img-container">
-                    <img src="./assets/images/patterns/stitch.jpg" alt="horgolt stitch">
-                </div>
-                <div class="description">
-                    <h2>Sticth</h2>
-                    <a href="./assets/minták/renszarvas.html" class="btn">Megnézem</a>
-                </div>
-            </div>
-
-            <div class="pattern">
-                <div class="img-container">
-                    <img src="./assets/images/patterns/minipingvin.jpg" alt="horgolt mini pingvin">
-                </div>
-                <div class="description">
-                    <h2>Mini pingvin</h2>
-                    <a href="./assets/minták/renszarvas.html" class="btn">Megnézem</a>
-                </div>
-            </div>
-
-            <div class="pattern">
-                <div class="img-container">
-                    <img src="./assets/images/patterns/pok.jpg" alt="horgolt pók">
-                </div>
-                <div class="description">
-                    <h2>Pók</h2>
-                    <a href="./assets/minták/renszarvas.html" class="btn">Megnézem</a>
-                </div>
-            </div>
-
-            <div class="pattern">
-                <div class="img-container">
-                    <img src="./assets/images/patterns/csibe.jpg" alt="horgolt csibe">
-                </div>
-                <div class="description">
-                    <h2>Csibe</h2>
-                    <a href="./assets/minták/renszarvas.html" class="btn">Megnézem</a>
-                </div>
-            </div>
-
-            <div class="pattern">
-                <div class="img-container">
-                    <img src="./assets/images/patterns/mehecske.jpg" alt="horgolt méhecske">
-                </div>
-                <div class="description">
-                    <h2>Méhecske</h2>
-                    <a href="./assets/minták/renszarvas.html" class="btn">Megnézem</a>
-                </div>
-            </div>
-
-            <div class="pattern">
-                <div class="img-container">
-                    <img src="./assets/images/patterns/yoda.jpg" alt="horgolt yoda">
-                </div>
-                <div class="description">
-                    <h2>Yoda</h2>
-                    <a href="./assets/minták/renszarvas.html" class="btn">Megnézem</a>
-                </div>
-            </div>
-
-            <div class="pattern">
-                <div class="img-container">
-                    <img src="./assets/images/patterns/denever.jpg" alt="horgolt denevér">
-                </div>
-                <div class="description">
-                    <h2>Denevér</h2>
-                    <a href="./assets/minták/renszarvas.html" class="btn">Megnézem</a>
-                </div>
-            </div>
+            <?php 
+                if($lockedBoxes != false){
+                    foreach($lockedBoxes as $box){
+                        echo('
+                            <div class="pattern">
+                                <div class="img-container">
+                                    <img src="' . BASE_URL . 'assets/images' .$box['image_url'] . '" alt="' . $box['image_title'] . '">
+                                </div>
+                                <div class="description">
+                                    <h2>' . $box['box_name'] . '</h2>
+                                <a href="'. BASE_URL . 'aktivalas' . $box['box_url'] . '" class="btn">Aktiválom</a>
+                                </div>
+                            </div>
+                            ');
+                    }
+                }
+            ?>
         </div>
     </main>
 </body>

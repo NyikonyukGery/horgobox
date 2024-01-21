@@ -17,7 +17,7 @@
     <!-- style -->
     <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/style.css">
     <!-- title -->
-    <title>Mintafeloldás | Csipcsirip - Horgobox</title>
+    <title>aktiválás | Csipcsirip - Horgobox</title>
 </head>
 
 <body class="full-page">
@@ -27,16 +27,19 @@
             <div class="inputs-container">
                 <div class="text-container">
                     <h3>Mintafeloldás</h3>
-                    <p>CsipCsip a Csibe</p>
+                    <p id="box-name"></p>
                 </div>
                 <div>
                     <input type="password" name="password" id="boxPassword" placeholder="Jelszó">
                 </div>
             </div>
             <div class="button-container">
-                <!-- <button type="button" onclick="UnlockPattern()">Minta feloldása</button> -->
                 <button type="button" onclick="UnlockBox()">Minta feloldása</button>
                 <a class="small" href="/">Vissza a főoldalra</a>
+            </div>
+            <div class="otheroption">
+                <p>Megvásárolnád?</p>
+                <a href="#" id="webshop-link">Irány a webshop!</a>
             </div>
         </div>
     </main>
@@ -47,7 +50,7 @@
 
     <script src="<?php echo(BASE_URL); ?>/assets/scripts/boxes.js"></script>
     <script>
-        var boxName = "<?php echo(explode("/", $request)[2]) ?>";
+        var boxName = "/<?php echo(explode("/", $request)[2]) ?>";
         GetBox();
     </script>
 </body>

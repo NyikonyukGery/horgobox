@@ -2,8 +2,7 @@
 
 //kizárólag másik php file hívhatja meg!
 
-
-require_once("../../setup.php");
+require_once(dirname(__DIR__, 2) . "/setup.php");
 require_once(ROOT_PATH . "/app/database/connect.php");
 
 
@@ -102,36 +101,41 @@ function NewsletterSignUp() {
     }
 }
 
-function GetPatternId($patternUrl){
+function GetboxId($boxUrl){
     global $conn;
-    $query = "SELECT `patterns`.`id` FROM `patterns` WHERE `patterns`.`unlock_url` = '$patternUrl'";
+    $query = "SELECT `boxes`.`id`, `boxes`.`name`, `boxes`.`webshop_url` FROM `boxes` WHERE `boxes`.`url` = '$boxUrl'";
     $response = $conn->query($query);
     if($response->num_rows == 1){
-        $patternId = $response->fetch_assoc()['id'];
-        $query = "SELECT `images`.`url`, `images`.`title` FROM `images` INNER JOIN `pattern_image` ON `pattern_image`.`image_id` = `images`.`id` WHERE `pattern_image`.`pattern_id` = $patternId AND `images`.`type` = 'cover'";
+        $box = $response->fetch_assoc();
+        $boxId = $box['id'];
+        $query = "SELECT `images`.`url`, `images`.`title` FROM `images` INNER JOIN `box_image` ON `box_image`.`image_id` = `images`.`id` WHERE `box_image`.`box_id` = $boxId AND `images`.`type` = 'cover'";
         $response = $conn->query($query);
         if($response->num_rows == 1){
-            return $response->fetch_assoc();
+            $boxData = $response->fetch_assoc();
+            $boxData['id'] = $boxId;
+            $boxData['name'] = $box['name'];
+            $boxData['webshop_url'] = $box['webshop_url'];
+            return $boxData;
         } else{
             return "no-cover";
         }
     } else {
         return false;
-    }  
+    }
 }
 
-function UnlockPattern($patternId, $password) {
+function UnlockBox($boxId, $password) {
     global $conn;
 
     $userId = $_SESSION["userId"];
 
-    $query = "SELECT * FROM `pattern_user` WHERE `pattern_user`.`user_id` = $userId AND `pattern_user`.`pattern_id` = '$patternId'";
+    $query = "SELECT * FROM `box_user` WHERE `box_user`.`user_id` = $userId AND `box_user`.`box_id` = '$boxId'";
     $response = $conn->query($query);
     if($response->num_rows == 0) {
-        $query = "SELECT `patterns`.`id` FROM patterns WHERE `patterns`.`id` = '$patternId' AND BINARY `patterns`.`password` = BINARY '$password'";
+        $query = "SELECT `boxes`.`id` FROM `boxes` WHERE `boxes`.`id` = '$boxId' AND BINARY `boxes`.`password` = BINARY '$password'";
         $response = $conn->query($query);
         if($response->num_rows > 0) {
-            $query = "INSERT INTO `pattern_user` (`user_id`, `pattern_id`) VALUES ($userId, $patternId)";
+            $query = "INSERT INTO `box_user` (`user_id`, `box_id`) VALUES ($userId, $boxId)";
             if($conn->query($query)){
                 return true;
             }
@@ -141,4 +145,44 @@ function UnlockPattern($patternId, $password) {
     } else {
         return true;
     } 
+}
+
+function GetUserBoxes(){
+    global $conn;
+
+    $userId = $_SESSION["userId"];
+
+    $query = "SELECT `boxes`.`name` AS \"box_name\", `boxes`.`url` AS \"box_url\", `images`.`url` AS \"image_url\", `images`.`title` AS \"image_title\" FROM `boxes` INNER JOIN `box_user` ON `boxes`.`id` = `box_user`.`box_id` 
+    INNER JOIN `box_image` ON `boxes`.`id` = `box_image`.`box_id`
+    INNER JOIN `images` ON `box_image`.`image_id` = `images`.`id`
+    WHERE `box_user`.`user_id` = $userId AND `images`.`type` = \"cover\";";
+    $response = $conn->query($query);
+    if($response->num_rows > 0){
+        $unlockedBoxes = array();
+        while($row = $response->fetch_assoc()){
+            $unlockedBoxes[] = $row;
+        }
+        return $unlockedBoxes;
+    } else {
+        return false;
+    }
+}
+
+function GetLockedBoxes(){
+    global $conn;
+
+    $userId = $_SESSION['userId'];
+
+    // $query = "SELECT `boxes`.`name` AS 'box_name', `boxes`.`url` AS box_url, `images`.`url` AS 'image_url', `images`.`title` AS 'image_title' FROM `boxes` LEFT JOIN `box_user` ON `boxes`.`id` = `box_user`.`box_id` INNER JOIN `box_image`ON `box_image`.`box_id` = `boxes`.`id` INNER JOIN `images` ON `images`.`id` = `box_image`.`image_id` WHERE (`box_user`.`user_id` != $userId OR `box_user`.`user_id` IS NULL) AND `images`.`type` = 'cover'";
+    $query = "SELECT `boxes`.`name` AS 'box_name', `boxes`.`url` AS box_url, `images`.`url` AS 'image_url', `images`.`title` AS 'image_title' FROM `boxes` LEFT JOIN `box_user` ON `boxes`.`id` = `box_user`.`box_id` INNER JOIN `box_image`ON `box_image`.`box_id` = `boxes`.`id` INNER JOIN `images` ON `images`.`id` = `box_image`.`image_id` WHERE `images`.`type` = 'cover' AND `box_user`.`box_id` NOT IN (SELECT `box_user`.`box_id` FROM `box_user` WHERE `box_user`.`user_id` = $userId)";
+    $response = $conn->query($query);
+    if($response->num_rows > 0){
+        $lockedBoxes = array();
+        while($row = $response->fetch_assoc()){
+            $lockedBoxes[] = $row;
+        }
+        return $lockedBoxes;
+    } else {
+        return false;
+    }
 }

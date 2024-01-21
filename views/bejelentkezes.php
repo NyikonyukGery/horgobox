@@ -17,7 +17,7 @@ if(isset($_SESSION['login']) && $_SESSION['login']){
     <meta name="description" content="" />
 
     <!-- style -->
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/style.css">
     <!-- title -->
     <title>Bejelentkezés | Csipcsirip - Horgobox</title>
 </head>
@@ -26,7 +26,7 @@ if(isset($_SESSION['login']) && $_SESSION['login']){
     <main class="center">
         <div class="login-container">
             <div class="logo-container">
-                <img src="./assets/images/static/csipcsiripp_logo.png" alt="csipcsiripp logo">
+                <img src="<?php echo(BASE_URL); ?>/assets/images/static/csipcsiripp_logo.png" alt="csipcsiripp logo">
             </div>
             <div class="inputs-container">
                 <div class="text-container">
@@ -52,7 +52,7 @@ if(isset($_SESSION['login']) && $_SESSION['login']){
         </div>
     </main>
 
-    <script src="./assets/scripts/authorization.js"></script>
+    <script src="<?php echo(BASE_URL); ?>/assets/scripts/authorization.js"></script>
     <script>
         addEventListener("keyup", function(e){
             if(e.code === "Enter"){

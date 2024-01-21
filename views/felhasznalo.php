@@ -11,7 +11,7 @@
     <meta name="description" content="" />
 
     <!-- style -->
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/style.css">
     <!-- title -->
     <title>Fiókom | Csipcsirip - Horgobox</title>
 </head>
@@ -20,7 +20,7 @@
     <?php require(ROOT_PATH . "/app/includes/navigation.php") ?>
 
     <main>
-        <h1>Fiókom</h1>
+        <h1 class="center">Fiókom</h1>
 
         <section>
             <h2>Általános adatok</h2>
@@ -66,7 +66,7 @@
         
     </div>
 
-    <script src="./assets/scripts/profile.js"></script>
+    <script src="<?php echo(BASE_URL); ?>/assets/scripts/profile.js"></script>
     <script>
         loadUser();
     </script>

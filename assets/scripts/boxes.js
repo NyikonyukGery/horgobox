@@ -15,9 +15,8 @@ function GetBox() {
     request.send(sendJson);
 
     request.onload = function() {
-        console.log(request.response);
         var jsonResponse = JSON.parse(request.response);
-
+        console.log(jsonResponse);
         if (jsonResponse.response == "error") {
             ShowPopupMessage(jsonResponse.error_title, jsonResponse.error_description, "error", 10);
             setTimeout(() => {
@@ -28,13 +27,15 @@ function GetBox() {
                 document.getElementById("box-cover").src = jsonResponse.box_data.url;
                 document.getElementById("box-cover").alt = jsonResponse.box_data.title;
             }
-
-            boxId = jsonResponse.box_id;
+            document.getElementById("box-name").innerText = jsonResponse.box_data.name;
+            document.getElementById("webshop-link").href = jsonResponse.box_data.webshop_url;
+            boxId = parseInt(jsonResponse.box_data.id);
+            document.title = jsonResponse.box_data.name + " - " + document.title;
         }
     }
 }
 
-function Unlockbox() {
+function UnlockBox() {
     boxPassword = document.getElementById("boxPassword").value.trim();
     if (boxPassword.length > 2) {
         var request = new XMLHttpRequest();

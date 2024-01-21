@@ -13,7 +13,7 @@
     <meta name="description" content="" />
 
     <!-- style -->
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/style.css">
     <!-- title -->
     <title> | Csipcsirip - Horgobox</title>
 </head>

@@ -2,7 +2,7 @@
 <nav>
     <div class="nav-container">
         <div class="logo-container">
-            <a href="<?php echo(BASE_URL . ""); ?>"><img src="./assets/images/static/csipcsiripp_logo.png" alt="csipcsiripp logo"></a>
+            <a href="<?php echo(BASE_URL . ""); ?>"><img src="<?php echo(BASE_URL); ?>/assets/images/static/csipcsiripp_logo.png" alt="csipcsiripp logo"></a>
         </div>
         <div class="link-container">
             <a href="<?php echo(BASE_URL . "felhasznalo"); ?>"><i class="fa-solid fa-user"></i></a>
