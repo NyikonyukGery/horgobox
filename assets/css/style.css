@@ -126,7 +126,7 @@ main>div>h1 {
 .patterns-container {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: 30px;
     grid-auto-rows: auto;
     margin-bottom: 50px;
@@ -446,6 +446,28 @@ div.title {
 
 /* RESPONSIVE STYLE */
 
+
+/* 
+FONTOS 
+ - CSAK 3 BOX JELENIK MEG 4 HELYETT ÁTMENETILEG
+*/
+
+
+/* 
+RESZPONZÍV OLDALAK 
+ - FŐOLDAL
+ - NAVIGÁCIÓ
+ - PROFIL
+ - BEJELENTKEZÉS
+ - REGISZTRÁCIÓ
+ - BOX
+ - 404
+ 
+
+KELL MÉG
+ - AKTIVÁLÁS
+*/
+
 @media only screen and (width <=1300px) {
     nav {
         padding: 0 20px;
@@ -480,6 +502,9 @@ div.title {
     .pattern {
         aspect-ratio: 3/4.2;
     }
+    .videos-container {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media only screen and (width <=650px) {
@@ -494,5 +519,37 @@ div.title {
     }
     .pattern {
         aspect-ratio: 3/4;
+    }
+    nav div.link-container {
+        gap: 30px;
+    }
+}
+
+@media only screen and (width <=450px) {
+    nav div.logo-container {
+        height: 90px;
+    }
+    nav div.nav-container {
+        flex-direction: column;
+        row-gap: 5px;
+        padding-bottom: 5px
+    }
+    nav div.link-container {
+        gap: 60px;
+    }
+    main.center {
+        width: 100%;
+        padding: 0;
+    }
+    .login-container {
+        width: 100%;
+    }
+    .login-container>.logo-container {
+        height: auto;
+        width: 100%;
+    }
+    .login-container>.logo-container>img {
+        height: unset;
+        width: 100%;
     }
 }
