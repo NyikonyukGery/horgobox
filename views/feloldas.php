@@ -3,11 +3,6 @@
     CheckSession();
 
     $request = $_SERVER['REQUEST_URI'];
-    echo($request);
-
-    // switch($request) {
-        
-    // }
 ?>
 
 <!DOCTYPE html>
@@ -20,13 +15,13 @@
     <meta name="description" content="" />
 
     <!-- style -->
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/style.css">
     <!-- title -->
     <title>Mintafeloldás | Csipcsirip - Horgobox</title>
 </head>
 
 <body class="full-page">
-    <img src="./assets/images/unlock/csipcsipbox.jpg" alt="csipcsipbox.jpg" class="background-image-unlock-page">
+    <img src="<?php echo(BASE_URL); ?>/assets/images/unlock/csipcsipbox.jpg" alt="no-box-cover.jpg" class="background-image-unlock-page" id="box-cover">
     <main class="bottom-right">
         <div class="login-container">
             <div class="inputs-container">
@@ -35,12 +30,13 @@
                     <p>CsipCsip a Csibe</p>
                 </div>
                 <div>
-                    <input type="password" name="password" id="patternPassword" placeholder="Jelszó">
+                    <input type="password" name="password" id="boxPassword" placeholder="Jelszó">
                 </div>
             </div>
             <div class="button-container">
-                <button type="button" onclick="UnlockPattern()">Minta feloldása</button>
-                <a class="small" href="index.html">Vissza a főoldalra</a>
+                <!-- <button type="button" onclick="UnlockPattern()">Minta feloldása</button> -->
+                <button type="button" onclick="UnlockBox()">Minta feloldása</button>
+                <a class="small" href="/">Vissza a főoldalra</a>
             </div>
         </div>
     </main>
@@ -49,7 +45,11 @@
         
     </div>
 
-    <script src="./assets/scripts/boxes.js"></script>
+    <script src="<?php echo(BASE_URL); ?>/assets/scripts/boxes.js"></script>
+    <script>
+        var boxName = "<?php echo(explode("/", $request)[2]) ?>";
+        GetBox();
+    </script>
 </body>
 
 </html>

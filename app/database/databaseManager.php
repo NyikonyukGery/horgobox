@@ -36,7 +36,7 @@ function RegisterNewUser($familyName, $firstName, $username, $email, $password, 
             return json_encode(["response" => "error", "error" => "Ez a felhasználónév már foglalt!"]);
         }
     } else {
-        $query = "INSERT INTO `users` (`user_type_id`, `email`, `familyName`, `firstName`, `username`, `password`, `newsletter_sub`) VALUES (1, '$email', '$familyName', '$firstName', '$username', '$password', $newsletter)";
+        $query = "INSERT INTO `users` (`role_id`, `email`, `familyName`, `firstName`, `username`, `password`, `newsletter_sub`) VALUES (1, '$email', '$familyName', '$firstName', '$username', '$password', $newsletter)";
         if($conn->query($query)){
             $_SESSION['userId'] = $conn->insert_id;
             $_SESSION['login'] = true;
@@ -102,18 +102,36 @@ function NewsletterSignUp() {
     }
 }
 
+function GetPatternId($patternUrl){
+    global $conn;
+    $query = "SELECT `patterns`.`id` FROM `patterns` WHERE `patterns`.`unlock_url` = '$patternUrl'";
+    $response = $conn->query($query);
+    if($response->num_rows == 1){
+        $patternId = $response->fetch_assoc()['id'];
+        $query = "SELECT `images`.`url`, `images`.`title` FROM `images` INNER JOIN `pattern_image` ON `pattern_image`.`image_id` = `images`.`id` WHERE `pattern_image`.`pattern_id` = $patternId AND `images`.`type` = 'cover'";
+        $response = $conn->query($query);
+        if($response->num_rows == 1){
+            return $response->fetch_assoc();
+        } else{
+            return "no-cover";
+        }
+    } else {
+        return false;
+    }  
+}
+
 function UnlockPattern($patternId, $password) {
     global $conn;
 
     $userId = $_SESSION["userId"];
 
-    $query = "SELECT * FROM `userpatterns` WHERE `userpatterns`.`user_id` = $userId AND `userpatterns`.`pattern_id` = '$patternId'";
+    $query = "SELECT * FROM `pattern_user` WHERE `pattern_user`.`user_id` = $userId AND `pattern_user`.`pattern_id` = '$patternId'";
     $response = $conn->query($query);
     if($response->num_rows == 0) {
         $query = "SELECT `patterns`.`id` FROM patterns WHERE `patterns`.`id` = '$patternId' AND BINARY `patterns`.`password` = BINARY '$password'";
         $response = $conn->query($query);
         if($response->num_rows > 0) {
-            $query = "INSERT INTO `userpatterns` (`user_id`, `pattern_id`) VALUES ($userId, $patternId)";
+            $query = "INSERT INTO `pattern_user` (`user_id`, `pattern_id`) VALUES ($userId, $patternId)";
             if($conn->query($query)){
                 return true;
             }
@@ -122,5 +140,5 @@ function UnlockPattern($patternId, $password) {
         }
     } else {
         return true;
-    }
+    } 
 }

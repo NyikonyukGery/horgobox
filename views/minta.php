@@ -15,14 +15,14 @@
     <!-- style -->
     <link rel="stylesheet" href="./assets/css/style.css">
     <!-- title -->
-    <title>Mintáim | Csipcsirip - Horgobox</title>
+    <title> | Csipcsirip - Horgobox</title>
 </head>
 
 <body>
     <?php require(ROOT_PATH . "/app/includes/navigation.php") ?>
 
     <main>
-        <h1>Mintáim</h1>
+        <h1></h1>
 
         
     </main>

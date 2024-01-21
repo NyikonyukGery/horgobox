@@ -1,6 +1,5 @@
+Options +FollowSymLinks -MultiViews
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^([^.]+)$ $1.php [NC,L]
-RewriteRule ^(feloldas/)＄ feloldas.php
-Options All -Indexes
-Options -MultiViews
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule (.*) index.php/$1 [L]

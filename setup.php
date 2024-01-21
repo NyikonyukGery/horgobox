@@ -19,6 +19,6 @@ function Redirect($url = ""){
 
 function CheckSession(){
     if(!isset($_SESSION['login']) || !$_SESSION['login']){
-        Redirect("bejelentkezes.php");
+        Redirect("bejelentkezes");
     }
 }
