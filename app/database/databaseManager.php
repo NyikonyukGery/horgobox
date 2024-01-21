@@ -186,3 +186,34 @@ function GetLockedBoxes(){
         return false;
     }
 }
+
+function LoadBox($boxName){
+    global $conn;
+
+    $userId = $_SESSION['userId'];
+
+    $query = "SELECT `boxes`.`id` AS 'box_id', `boxes`.`name`, `boxes`.`description` FROM `box_user` INNER JOIN `boxes` ON `boxes`.`id` = `box_user`.`box_id` WHERE `boxes`.`url` = '/$boxName' AND `box_user`.`user_id` = $userId";
+    $response = $conn->query($query);
+    if($response->num_rows > 0){
+        $boxData = array();
+        $boxData["box"][] = $response->fetch_assoc();
+        $boxId = $boxData["box"][0]['box_id'];
+
+        $query = "SELECT `videos`.* FROM `videos` INNER JOIN `box_video` ON `box_video`.`video_id` = `videos`.`id` WHERE `box_video`.`box_id` = $boxId";
+        $response = $conn->query($query);
+        while($row = $response->fetch_assoc()){
+            $boxData['videos'][] = $row;
+        }
+
+        $query = "SELECT `download_files`.* FROM `download_files` INNER JOIN `box_download` ON `box_download`.`download_file_id` = `download_files`.`id` WHERE `box_download`.`box_id` = $boxId";
+        $response = $conn->query($query);
+        while($row = $response->fetch_assoc()){
+            $boxData['downloads'][] = $row;
+        }
+
+        return $boxData;
+        
+    } else {
+        return false;
+    }
+}

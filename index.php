@@ -21,7 +21,10 @@ switch ($request) {
     case (preg_match("/\/aktivalas\/.*/", $request) ? true : false):
         require __DIR__ . "/views/aktivalas.php";
         break;
+    case (preg_match("/\/boxok\/.*/", $request) ? true : false):
+        require __DIR__ . "/views/box.php";
+        break;
     default:
         require __DIR__ . "/views/404.php";
-        break;   
+        break;
 }
