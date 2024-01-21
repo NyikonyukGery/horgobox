@@ -57,6 +57,7 @@ a.btn {
     border-radius: var(--border-radius);
     outline: solid 2px var(--primary-color);
     transition: 100ms ease;
+    text-align: center;
 }
 
 a.btn:hover,
@@ -187,6 +188,7 @@ main.center {
     background-color: var(--secondary-color);
     padding: 20px;
     box-shadow: 1px 2px 10px var(--box-shadow-color);
+    text-wrap: balance;
 }
 
 .login-container>.logo-container {
@@ -351,8 +353,9 @@ main.bottom-right {
 /* FELHASZNÁLÓI PROFIL */
 
 h1.center {
-    margin: 0 auto 30px;
+    margin: 0 auto;
     width: fit-content;
+    text-align: center;
 }
 
 section {
