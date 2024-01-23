@@ -4,21 +4,27 @@
 
 require_once(dirname(__DIR__, 2) . "/setup.php");
 require_once(ROOT_PATH . "/app/database/connect.php");
+require_once(ROOT_PATH . "/app/endpoints/mailer.php");
 
 
 //felhaszáló ellenőrzése és bejelentkeztetése
 function CheckLoginCredentials($email, $password){
     global $conn;
 
-    $query = "SELECT `users`.`id` FROM `users` WHERE BINARY `users`.`email` = BINARY '" . $email . "' AND BINARY `users`.`password` = BINARY '" . $password . "'";
+    $query = "SELECT `users`.`id`, `users`.`valid_email` FROM `users` WHERE BINARY `users`.`email` = BINARY '" . $email . "' AND BINARY `users`.`password` = BINARY '" . $password . "'";
     $response = $conn->query($query);
     if($response->num_rows == 1){
         $record = $response->fetch_assoc();
-        $_SESSION["userId"] = $record['id'];
-        $_SESSION['login'] = true;
-        return true;
+        if($record['valid_email']) {
+            $_SESSION["userId"] = $record['id'];
+            $_SESSION['login'] = true;
+            return json_encode(["response" => "success", "route" => BASE_URL]);
+        } else {
+            $_SESSION['userId'] = $record['id'];
+            return json_encode(["response" => "success", "route" => BASE_URL . "emailmegerosites"]);
+        }
     } else{
-        return false;
+        return json_encode(["response" => "error"]);
     }
 }
 
@@ -38,8 +44,15 @@ function RegisterNewUser($familyName, $firstName, $username, $email, $password, 
         $query = "INSERT INTO `users` (`role_id`, `email`, `familyName`, `firstName`, `username`, `password`, `newsletter_sub`) VALUES (1, '$email', '$familyName', '$firstName', '$username', '$password', $newsletter)";
         if($conn->query($query)){
             $_SESSION['userId'] = $conn->insert_id;
-            $_SESSION['login'] = true;
-            return json_encode(["response" => "success", "route" => BASE_URL]);
+            
+            $code = str_pad(random_int(1, 999999), 6, '0', STR_PAD_LEFT);
+            $body = "Az email megerősítéséhez szükséges kód: " . $code;
+            sendMail("no-reply@csipcsiripp.hu", $email, "Email megerősítése", $body);
+            
+            $query = "INSERT INTO `validation_codes` (`user_id`, `validation_data`, `type`) VALUES (" . $_SESSION['userId'] .", '$code', 'email')";
+            $conn->query($query);
+
+            return json_encode(["response" => "success", "route" => BASE_URL . "emailmegerosites"]);
         } else {
             return json_encode(["response" => "error", "error" => "A felhasználót nem sikerült létrehozni!"]);
         }
@@ -47,6 +60,73 @@ function RegisterNewUser($familyName, $firstName, $username, $email, $password, 
 
     return json_encode(["response" => "error", "error" => "Sikertelen regisztráció!"]);
 }
+
+function EmailConfirmed(){
+    global $conn;
+
+    $userId = $_SESSION['userId'];
+
+    $query = "SELECT `users`.`valid_email` FROM `users` WHERE `users`.`id` = $userId";
+    $response = $conn->query($query);
+    if($response->num_rows > 0){
+        if($response->fetch_assoc()['valid_email']){
+            return true;
+        } else {
+            return false;
+        }
+    } else{
+        return false;
+    }
+}
+
+
+function ResendEmailConfirmation(){
+    global $conn;
+
+    $userId = $_SESSION['userId'];
+    
+    $query = "DELETE FROM `validation_codes` WHERE `validation_codes`.`user_id` = $userId";
+    $conn->query($query);
+
+    $query = "SELECT `users`.`email` FROM `users` WHERE `id` = $userId";
+    $email = $conn->query($query)->fetch_assoc()['email'];
+
+    $code = str_pad(random_int(1, 999999), 6, '0', STR_PAD_LEFT);
+    $body = "Az email megerősítéséhez szükséges kód: " . $code;
+    sendMail("no-reply@csipcsiripp.hu", $email, "Email megerősítése", $body);
+    
+    $query = "INSERT INTO `validation_codes` (`user_id`, `validation_data`, `type`) VALUES (" . $_SESSION['userId'] .", '$code', 'email')";
+    $conn->query($query);
+
+    return true;
+}
+
+function CheckEmailConfirmationCode($code){
+    global $conn;
+
+    $userId = $_SESSION['userId'];
+
+    $query = "SELECT `validation_codes`.`validation_data`, `validation_codes`.`sentTime` FROM `validation_codes` WHERE `validation_codes`.`type` = 'email' AND `validation_codes`.`user_id` = $userId";
+    $response = $conn->query($query);
+    if($response->num_rows > 0){
+        $record = $response->fetch_assoc();
+        if($record['validation_data'] == $code){
+            $query = "DELETE FROM `validation_codes` WHERE `validation_codes`.`user_id` = $userId AND `type` = 'email'";
+            $conn->query($query);
+
+            $query = "UPDATE `users` SET `users`.`valid_email` = true WHERE `users`.`id` = $userId";
+            $conn->query($query);
+
+            $_SESSION['login'] = true;
+            return json_encode(["response" => "success", "route" => BASE_URL]);
+        } else {
+            return json_encode(["response" => "error", "error_title" => "Hibás kód!", "error_description" => "Ismeretlen kódot adott meg!"]);
+        }
+    } else {
+        return json_encode(["response" => "error", "error_title" => "Hibás kód!", "error_description" => "Ismeretlen kódot adott meg!"]);
+    }
+}
+
 
 function GetUserData() {
     global $conn;

@@ -12,6 +12,9 @@ $sqlUser = "app";
 $sqlPassword = "application";
 $sqlDatabase = "horgobox";
 
+$noReplyEmail = "no-reply@csipcsiripp.hu";
+$noReplyEmailPassword = "&c(!8VoD-]d+";
+
 function Redirect($url = ""){
     header("location: " . BASE_URL .  $url);
     exit();

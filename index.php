@@ -18,6 +18,9 @@ switch ($request) {
     case "/":
         require __DIR__ . "/views/fooldal.php";
         break;
+    case "/emailmegerosites":
+        require __DIR__ . "/views/emailmegerosites.php";
+        break;
     case (preg_match("/\/aktivalas\/.*/", $request) ? true : false):
         require __DIR__ . "/views/aktivalas.php";
         break;

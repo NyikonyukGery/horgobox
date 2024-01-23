@@ -208,6 +208,12 @@ main.center {
     gap: 20px;
 }
 
+.login-container>.inputs-container>.text-container p {
+    margin-top: 15px;
+    font-size: 1rem;
+    line-height: 130%;
+}
+
 .login-container>.inputs-container input {
     padding: 10px 30px;
     border-radius: var(--border-radius);

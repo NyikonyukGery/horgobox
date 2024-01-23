@@ -15,8 +15,9 @@ if(!IS_AJAX && !strpos($_SERVER['HTTP_REFERER'],getenv('HTTP_HOST'))) {
         } else {
             require_once(ROOT_PATH . "/app/database/databaseManager.php");
             
-            if(CheckLoginCredentials(htmlspecialchars($jsonData->user->email), hash("sha256", htmlspecialchars($jsonData->user->password)))){
-                echo(json_encode(['response' => "success", "route" => BASE_URL]));
+            $CheckLoginResponse = json_decode(CheckLoginCredentials(htmlspecialchars($jsonData->user->email), hash("sha256", htmlspecialchars($jsonData->user->password))));
+            if($CheckLoginResponse->response == "success"){
+                echo(json_encode($CheckLoginResponse));
                 return;
             } else{
                 echo(json_encode(["response" => "error", "error" => "Hibás email cím vagy jelszó!"]));
