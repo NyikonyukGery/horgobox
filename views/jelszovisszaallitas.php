@@ -2,10 +2,11 @@
     require_once("setup.php");
     require_once(ROOT_PATH . "/app/database/databaseManager.php");
 
-    if(isset($_SESSION['login']) && $_SESSION['login'] && EmailConfirmed()){
+    $userId = $_GET['user'];
+    $token = $_GET['token'];
+
+    if(isset($_SESSION['login']) && $_SESSION['login']){
         header("location: " .BASE_URL);
-    } else if(!isset($_SESSION['userId'])){
-        header("location: " . BASE_URL . "bejelentkezes");
     }
 ?>
 
@@ -21,7 +22,7 @@
     <!-- style -->
     <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/style.css">
     <!-- title -->
-    <title>Email megerősítése | Csipcsirip - Horgobox</title>
+    <title>Jelszó visszaállítása | Csipcsirip - Horgobox</title>
 </head>
 
 <body>
@@ -32,24 +33,15 @@
             </div>
             <div class="inputs-container">
                 <div class="text-container">
-                    <h3>Email megerősítése</h3>
-                    <p>Elküldtük a regisztrációkor megadott email címre a kódot! (ellenőrizd a spam mappát is)</p>
+                    <h3>Jelszó visszaállítása</h3>
+                    <p>Kérjük adja meg új jelszavát!</p>
                 </div>
                 <div>
-                    <input type="text" name="code" id="code" placeholder="Megerősítő kód">
-                </div>
-                <div class="error-container" id="error-container">
-                    <p id="error-message">Hibás biztonsági kód! Elküldtük az újat!</p>
-                </div>
-            </div>
-            <div class="otheroption">
-                <div>
-                    <p>Nem kaptad meg?</p>
-                    <a href="#" onclick="ResendEmail()">Kód újraküldése</a>
+                    <input type="password" name="password" id="password" placeholder="Új jelszó">
                 </div>
             </div>
             <div class="button-container">
-                <button type="button" onclick="SubmitCode()">Megerősítés</button>
+                <button type="button" onclick="SendNewPassword()">Jelszó frissítése</button>
             </div>
         </div>
     </main>
@@ -59,8 +51,12 @@
         
     </div>
 
-    <script src="<?php echo(BASE_URL); ?>/assets/scripts/confirmEmail.js"></script>
+    <script src="<?php echo(BASE_URL); ?>/assets/scripts/passwordReset.js"></script>
     <script src="<?php echo(BASE_URL); ?>/assets/scripts/popup.js"></script>
+    <script>
+        const user = "<?php echo($userId); ?>";
+        const token = "<?php echo($token); ?>";
+    </script>
 </body>
 
 </html>

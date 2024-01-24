@@ -251,8 +251,18 @@ main.center {
 
 .login-container>.otheroption {
     display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.login-container>.otheroption>div {
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.login-container>.otheroption>div.normal>a {
+    color: var(--extra-color);
 }
 
 .login-container>.otheroption p {

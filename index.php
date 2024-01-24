@@ -21,11 +21,17 @@ switch ($request) {
     case "/emailmegerosites":
         require __DIR__ . "/views/emailmegerosites.php";
         break;
+    case "/elfelejtett-jelszo":
+        require __DIR__ . "/views/elfelejtettjelszo.php";
+        break;
     case (preg_match("/\/aktivalas\/.*/", $request) ? true : false):
         require __DIR__ . "/views/aktivalas.php";
         break;
     case (preg_match("/\/boxok\/.*/", $request) ? true : false):
         require __DIR__ . "/views/box.php";
+        break;
+    case (preg_match("/\/jelszo-visszaallitas?.*/", $request) ? true : false):
+        require __DIR__ . "/views/jelszovisszaallitas.php";
         break;
     default:
         require __DIR__ . "/views/404.php";

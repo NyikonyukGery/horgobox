@@ -43,8 +43,13 @@ if(isset($_SESSION['login']) && $_SESSION['login']){
                 </div>
             </div>
             <div class="otheroption">
-                <p>Még nincs felhasználód?</p>
-                <a href="<?php echo(BASE_URL . "regisztracio"); ?>">Regisztráció</a>
+                <div>
+                    <p>Még nincs felhasználód?</p>
+                    <a href="<?php echo(BASE_URL . "regisztracio"); ?>">Regisztráció</a>
+                </div>
+                <div class="normal">
+                    <a href="<?php echo(BASE_URL . "elfelejtett-jelszo"); ?>">Elfelejtett jelszó</a>
+                </div>
             </div>
             <div class="button-container">
                 <button type="button" onclick="LoginUser()">Bejelentkezés</button>

@@ -67,6 +67,7 @@
     </div>
 
     <script src="<?php echo(BASE_URL); ?>/assets/scripts/profile.js"></script>
+    <script src="<?php echo(BASE_URL); ?>/assets/scripts/popup.js"></script>
     <script>
         loadUser();
     </script>

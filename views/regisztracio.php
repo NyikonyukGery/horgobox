@@ -56,8 +56,10 @@
                 </div>
             </div>
             <div class="otheroption">
-                <p>Már van felhasználód?</p>
-                <a href="<?php echo(BASE_URL . "bejelentkezes"); ?>">Bejelentkezés</a>
+                <div>
+                    <p>Már van felhasználód?</p>
+                    <a href="<?php echo(BASE_URL . "bejelentkezes"); ?>">Bejelentkezés</a>
+                </div>
             </div>
             <div class="button-container">
                 <button type="button" onclick="RegisterUser()">Regisztráció</button>

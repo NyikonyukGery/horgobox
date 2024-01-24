@@ -127,6 +127,54 @@ function CheckEmailConfirmationCode($code){
     }
 }
 
+function ResetPassword($email){
+    global $conn;
+
+    
+    $query = "SELECT `users`.`id` FROM `users` WHERE `users`.`email` = '$email'";
+    $response = $conn->query($query);
+    
+    if($response->num_rows == 1){
+        $userId = $response->fetch_assoc()['id'];
+        $token = bin2hex(random_bytes(16));
+        
+        $query = "INSERT INTO `validation_codes` (`user_id`, `validation_data`, `type`) VALUES ($userId, '$token', 'passwordReset')";
+        if($conn->query($query)){
+            $body = "A jelszavad visszaállításához kattints ide: <a href='" . BASE_URL . "jelszo-visszaallitas?token=$token&user=$userId'>Jelszó visszaállítása</a>";
+            sendMail("no-reply@csipcsiripp.hu", $email, "Jelszó visszaállítása", $body);
+            return json_encode(["response" => "success"]);
+        }  else {
+            return json_encode(["response" => "error", "error_title" => "Generálási hiba!", "error_description" => "Sikertelen link létrehozás!"]);
+        }
+    } else {
+        return json_encode(["response" => "error", "error_title" => "Hibás email!", "error_description" => "A megadott email címmel nem regisztráltak felhasználót!"]);
+    }
+}
+
+function UpdatePassword($password, $token, $userId){
+    global $conn;
+
+    $query = "SELECT `validation_codes`.`sentTime` FROM `validation_codes` WHERE `validation_codes`.`user_id` = $userId AND `validation_codes`.`validation_data` = '$token' AND `validation_codes`.`type` = 'passwordReset'";
+    $response = $conn->query($query);
+    
+    if($response->num_rows == 1){
+        $query = "UPDATE `users` SET `users`.`password` = '$password' WHERE `users`.`id` = $userId";
+        if($conn->query($query)){
+            $query = "DELETE FROM `validation_codes` WHERE `validation_codes`.`user_id` = $userId AND `validation_codes`.`validation_data` = '$token'";
+            $conn->query($query);
+
+            $query = "SELECT `users`.`email` FROM `users` WHERE `users`.`id` = $userId";
+            $email = $conn->query($query)->fetch_assoc()['email'];
+            $body = "Sikeresen frissítetted felhasználód jelszavát!";
+            sendMail("no-reply@csipcsiripp.hu", $email, "Sikeres jelszó visszaállítás", $body);
+            return json_encode(["response" => "success", "route" => BASE_URL . "bejelentkezes"]);
+        } else{
+            return json_encode(["response" => "error", "error_title" => "Sikertelen művelet!", "error_description" => "Nem sikerült frissíteni a jelszót!"]);
+        }
+    } else{
+        return json_encode(["response" => "error", "error_title" => "Érvénytelen link!", "error_description" => "A visszaállításhoz használt link érvénytelen!"]);
+    }
+}
 
 function GetUserData() {
     global $conn;

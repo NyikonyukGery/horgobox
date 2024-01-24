@@ -49,6 +49,7 @@
     </div>
 
     <script src="<?php echo(BASE_URL); ?>/assets/scripts/boxes.js"></script>
+    <script src="<?php echo(BASE_URL); ?>/assets/scripts/popup.js"></script>
     <script>
         var boxName = "/<?php echo(explode("/", $request)[2]) ?>";
         GetBox();

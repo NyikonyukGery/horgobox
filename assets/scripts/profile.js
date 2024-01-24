@@ -1,27 +1,26 @@
 var originalUserJson;
-var messageLimit = 3;
 
-function loadUser(){
+function loadUser() {
     var request = new XMLHttpRequest();
     request.open("POST", "app/endpoints/userData.php");
     request.setRequestHeader("Content-type", 'application/x-www-form-urlencoded');
     request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
-    var sendJson = JSON.stringify({"method": "getUserData"});
+    var sendJson = JSON.stringify({ "method": "getUserData" });
     request.send(sendJson);
 
     request.onload = function() {
         var jsonResponse = JSON.parse(request.response);
-        if(jsonResponse.response == "error") {
+        if (jsonResponse.response == "error") {
             ShowPopupMessage(jsonResponse.error_title, jsonResponse.error_description);
 
-        } else if (jsonResponse.response == "success"){
+        } else if (jsonResponse.response == "success") {
             originalUserJson = jsonResponse.user;
             document.getElementById("familyName").value = jsonResponse.user.familyName;
             document.getElementById("firstName").value = jsonResponse.user.firstName;
             document.getElementById("username").value = jsonResponse.user.username;
             document.getElementById("email").innerText = jsonResponse.user.email;
-            if(jsonResponse.user.newsletter == true){
+            if (jsonResponse.user.newsletter == true) {
                 document.getElementById("newsletter-action-container").innerHTML = "<p>Már feliratkozott!</p>";
             }
         }
@@ -33,21 +32,21 @@ function UpdateUser() {
     var firstName = document.getElementById("firstName").value.trim();
     var username = document.getElementById("username").value.trim();
     var password = document.getElementById("password").value;
-    if(originalUserJson.familyName != familyName || originalUserJson.firstName != firstName || originalUserJson.username != username || password.length > 0) {
+    if (originalUserJson.familyName != familyName || originalUserJson.firstName != firstName || originalUserJson.username != username || password.length > 0) {
         var request = new XMLHttpRequest();
         request.open("POST", "app/endpoints/userData.php");
         request.setRequestHeader("Content-type", 'application/x-www-form-urlencoded');
         request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
-        var sendJson = JSON.stringify({ "method": "updateUser", "user": { "familyName": familyName, "firstName": firstName, "username": username, "password": password} });
+        var sendJson = JSON.stringify({ "method": "updateUser", "user": { "familyName": familyName, "firstName": firstName, "username": username, "password": password } });
         request.send(sendJson);
 
-        request.onload = function () {
+        request.onload = function() {
             var jsonResponse = JSON.parse(request.response);
-            if(jsonResponse.response == "error") {
+            if (jsonResponse.response == "error") {
                 ShowPopupMessage(jsonResponse.error_title, jsonResponse.error_description);
 
-            } else if (jsonResponse.response == "success"){
+            } else if (jsonResponse.response == "success") {
                 originalUserJson = jsonResponse.user;
                 document.getElementById("familyName").value = jsonResponse.user.familyName;
                 document.getElementById("firstName").value = jsonResponse.user.firstName;
@@ -67,31 +66,16 @@ function NewsletterSignUp() {
     request.setRequestHeader("Content-type", 'application/x-www-form-urlencoded');
     request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
-    var sendJson = JSON.stringify({ "method": "newsletterSignUp"});
+    var sendJson = JSON.stringify({ "method": "newsletterSignUp" });
     request.send(sendJson);
 
-    request.onload = function () {
+    request.onload = function() {
         var jsonResponse = JSON.parse(request.response);
 
-        if(jsonResponse.response == "error"){
+        if (jsonResponse.response == "error") {
             ShowPopupMessage(jsonResponse.error_title, jsonResponse.error_description)
-        } else if(jsonResponse.response == "success") {
+        } else if (jsonResponse.response == "success") {
             document.getElementById("newsletter-action-container").innerHTML = "<p>Sikeresen feliratkozott!</p>";
         }
-    }
-}
-
-function ShowPopupMessage(title, message, type="error", durationInSeconds = 3) {
-    if(messageLimit > 0){
-        if(type=="error"){
-            document.getElementById("message-popup-container").innerHTML += "<div class='error popup' id='message-popup'><p class='message-title' id='message-title'>" + title + "</p><p class='message-description' id='message-description'>" + message + "</p></div>";
-        } else if(type=="success"){
-            document.getElementById("message-popup-container").innerHTML += "<div class='success popup' id='message-popup'><p class='message-title' id='message-title'>" + title + "</p><p class='message-description' id='message-description'>" + message + "</p></div>";
-        }
-        messageLimit--;
-        setTimeout(() => {
-            document.getElementById("message-popup").remove();
-            messageLimit++;
-        }, durationInSeconds*1000);
     }
 }

@@ -83,5 +83,27 @@ if(!IS_AJAX && !strpos($_SERVER['HTTP_REFERER'],getenv('HTTP_HOST'))) {
             echo(json_encode(["response" => "error", "error_title" => "Hibás kód!", "error_description" => "Ismeretlen kódot adott meg!"]));
         }
         return;
+    } else if($jsonData->method == "passwordReset"){
+        if(filter_var($jsonData->email, FILTER_VALIDATE_EMAIL)){
+            require_once(ROOT_PATH . "/app/database/databaseManager.php");
+            $email = htmlspecialchars($jsonData->email);
+            echo(ResetPassword($email));
+            return;
+        } else {
+            echo(json_encode(["response" => "error", "error_title" => "Hibás email!", "error_description" => "A megadott email címmel nem regisztráltak felhasználót!"]));
+        }
+    } else if($jsonData->method == "updatePassword"){
+        $password = $jsonData->password;
+        if(strlen($jsonData->password) != 0 && (strlen($jsonData->password) < 8 || strlen($jsonData->password) > 100 || (!preg_match('@[A-Z]@', $password) || !preg_match('@[a-z]@', $password) || !preg_match('@[0-9]@', $password) || !preg_match('@[^\w]@', $password)))){
+            echo(json_encode(["response" => "error", "error_title" => "Hibás jelszó!", "error_description" => "Tartalmaznia kell számot, kis- és nagybetűt, különleges karakter!\nLegalább 8 karakternek kell lennie!"]));
+            return;
+        } else {
+            require_once(ROOT_PATH . "/app/database/databaseManager.php");
+            $password = hash("sha256", htmlspecialchars($password));
+            $token = htmlspecialchars($jsonData->token);
+            $userId = htmlspecialchars($jsonData->user);
+            echo(UpdatePassword($password, $token, $userId));
+            return;
+        }
     }
 }
