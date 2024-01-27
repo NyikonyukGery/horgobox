@@ -37,6 +37,11 @@
                     <input type="email" name="email" id="email" placeholder="Email cím">
                 </div>
             </div>
+            <div class="otheroption">
+                <div class="normal">
+                    <a href="<?php echo(BASE_URL); ?>">Vissza a főoldalra</a>
+                </div>
+            </div>
             <div class="button-container">
                 <button type="button" onclick="SendPasswordReset()">Elküldés</button>
             </div>

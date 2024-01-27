@@ -10,6 +10,7 @@ function SendPasswordReset() {
         request.send(sendJson);
 
         request.onload = function() {
+            console.log(request.response);
             var jsonResponse = JSON.parse(request.response);
             if (jsonResponse.response == "error") {
                 ShowPopupMessage(jsonResponse.error_title, jsonResponse.error_description);
