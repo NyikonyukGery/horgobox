@@ -541,7 +541,7 @@ KELL MÉG
     }
 }
 
-@media only screen and (width <=450px) {
+@media only screen and (width <=480px) {
     nav div.logo-container {
         height: 90px;
     }

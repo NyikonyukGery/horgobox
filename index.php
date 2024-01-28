@@ -1,5 +1,5 @@
 <?php
-$request = $_SERVER['REQUEST_URI'];
+$request = explode('.', $_SERVER['REQUEST_URI'])[0];
 
 
 switch ($request) {

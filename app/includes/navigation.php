@@ -5,6 +5,7 @@
             <a href="<?php echo(BASE_URL . ""); ?>"><img src="<?php echo(BASE_URL); ?>/assets/images/static/csipcsiripp_logo.png" alt="csipcsiripp logo"></a>
         </div>
         <div class="link-container">
+            <a href="<?php echo(BASE_URL); ?>"><i class="fa-solid fa-home"></i></a>
             <a href="<?php echo(BASE_URL . "felhasznalo"); ?>"><i class="fa-solid fa-user"></i></a>
             <a href="<?php echo(BASE_URL . "logout"); ?>"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
         </div>

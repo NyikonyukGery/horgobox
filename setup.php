@@ -1,6 +1,11 @@
 <?php 
-
+ini_set('session.cookie_secure', 1);
+ini_set('session.cookie_httponly', 1);
 session_start();
+
+// if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
+//     http_response_code(403);
+// }
 
 define("ROOT_PATH", realpath(dirname(__FILE__)));
 define("BASE_URL", "http://horgobox.local/");

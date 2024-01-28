@@ -2,15 +2,58 @@
 
 //kizárólag másik php file hívhatja meg!
 
+use LDAP\Result;
+
 require_once(dirname(__DIR__, 2) . "/setup.php");
 require_once(ROOT_PATH . "/app/database/connect.php");
 require_once(ROOT_PATH . "/app/endpoints/mailer.php");
 require_once(ROOT_PATH . "/app/includes/mailGenerator.php");
 
 
+//felhasználói jogosultságok ellenőrzése
+function CheckUserPermissions($permissions) {
+    global $conn;
+
+    if (!isset($_SESSION["userId"])){
+        Redirect("bejelentkezes");
+    } else {
+        $query = "SELECT `role_id` FROM `users` WHERE id = '" . $_SESSION["userId"] . "'";
+        $resp = $conn->query($query);
+        $rowCount = $resp->num_rows;
+        if ($rowCount == 0) {
+            Redirect("bejelentkezes");
+        } else {
+            $roleId = $resp->fetch_assoc()["role_id"];
+            $query = "SELECT `permissions` FROM `roles` WHERE id = '" . $roleId . "'";
+            $response = $conn->query($query);
+
+            if($response->num_rows != 0){
+                $permissionsJson = json_decode($response->fetch_assoc()["permissions"]);
+                $permissionsArray = $permissionsJson->permissions;
+                
+                if($permissionsArray[0] != "ALL") {
+                    foreach ($permissions as $value) {
+                        if (!in_array($value, $permissionsArray)) {
+                            Redirect();
+                        }
+                    }
+                }
+            } else {
+                Redirect();
+            }
+            
+        }
+    } 
+}
+
+
 //felhaszáló ellenőrzése és bejelentkeztetése
 function CheckLoginCredentials($email, $password){
     global $conn;
+
+    if(isset($_SESSION['userId'])){
+        return json_encode(["response" => "success", "route" => BASE_URL]);
+    }
 
     $query = "SELECT `users`.`id`, `users`.`valid_email` FROM `users` WHERE BINARY `users`.`email` = BINARY '" . $email . "' AND BINARY `users`.`password` = BINARY '" . $password . "'";
     $response = $conn->query($query);
@@ -29,6 +72,8 @@ function CheckLoginCredentials($email, $password){
     }
 }
 
+
+//felhasználó regisztráció
 function RegisterNewUser($familyName, $firstName, $username, $email, $password, $newsletter = "false"){
     global $conn;
 
@@ -42,7 +87,10 @@ function RegisterNewUser($familyName, $firstName, $username, $email, $password, 
             return json_encode(["response" => "error", "error" => "Ez a felhasználónév már foglalt!"]);
         }
     } else {
-        $query = "INSERT INTO `users` (`role_id`, `email`, `familyName`, `firstName`, `username`, `password`, `newsletter_sub`) VALUES (1, '$email', '$familyName', '$firstName', '$username', '$password', $newsletter)";
+        $query = "SELECT `id` FROM `roles` WHERE `roles`.`name` = 'Alapértelmezett'";
+        $roleId = $conn->query($query)->fetch_assoc()['id'];
+
+        $query = "INSERT INTO `users` (`role_id`, `email`, `familyName`, `firstName`, `username`, `password`, `newsletter_sub`) VALUES ($roleId, '$email', '$familyName', '$firstName', '$username', '$password', $newsletter)";
         if($conn->query($query)){
             $_SESSION['userId'] = $conn->insert_id;
             
@@ -65,6 +113,8 @@ function RegisterNewUser($familyName, $firstName, $username, $email, $password, 
     return json_encode(["response" => "error", "error" => "Sikertelen regisztráció!"]);
 }
 
+
+//felhaszáló email megerősítésének ellenőrzése
 function EmailConfirmed(){
     global $conn;
 
@@ -84,6 +134,7 @@ function EmailConfirmed(){
 }
 
 
+//Email megerősítő kód újraküldése
 function ResendEmailConfirmation(){
     global $conn;
 
@@ -104,6 +155,8 @@ function ResendEmailConfirmation(){
     return true;
 }
 
+
+//Email megerősítő kód ellenőrzése
 function CheckEmailConfirmationCode($code){
     global $conn;
 
@@ -133,10 +186,11 @@ function CheckEmailConfirmationCode($code){
     }
 }
 
+
+//jelszó visszaállítása - email küldése
 function ResetPassword($email){
     global $conn;
 
-    
     $query = "SELECT `users`.`id` FROM `users` WHERE `users`.`email` = '$email'";
     $response = $conn->query($query);
     
@@ -160,6 +214,8 @@ function ResetPassword($email){
     }
 }
 
+
+//jelszó visszaállítása - frissítés
 function UpdatePassword($password, $token, $userId){
     global $conn;
 
@@ -177,7 +233,6 @@ function UpdatePassword($password, $token, $userId){
 
             $query = "SELECT `users`.`email` FROM `users` WHERE `users`.`id` = $userId";
             $email = $conn->query($query)->fetch_assoc()['email'];
-            // $body = "Sikeresen frissítetted felhasználód jelszavát!";
             $body = GenerateForgotPasswordSuccess();
             sendMail("no-reply@csipcsiripp.hu", $email, "Sikeres jelszóváltoztatás", $body);
             return json_encode(["response" => "success", "route" => BASE_URL . "bejelentkezes"]);
@@ -189,6 +244,8 @@ function UpdatePassword($password, $token, $userId){
     }
 }
 
+
+//felhasználói adatok kinyerése
 function GetUserData() {
     global $conn;
 
@@ -204,6 +261,8 @@ function GetUserData() {
     }
 }
 
+
+//felhasználói profil frissítése
 function UpdateUserData($familyName, $firstName, $username, $password){
     global $conn;
 
@@ -233,6 +292,8 @@ function UpdateUserData($familyName, $firstName, $username, $password){
     return json_encode(["response" => "error","error_title" => "Sikertelen módosítás!", "error_description" => "Sikertelen módosítás!"]);
 }
 
+
+//hírlevél feliratkozás
 function NewsletterSignUp() {
     global $conn;
 
@@ -246,6 +307,8 @@ function NewsletterSignUp() {
     }
 }
 
+
+//tananyag id lekérése név alapján
 function GetboxId($boxUrl){
     global $conn;
     $query = "SELECT `boxes`.`id`, `boxes`.`name`, `boxes`.`webshop_url` FROM `boxes` WHERE `boxes`.`url` = '$boxUrl'";
@@ -269,6 +332,8 @@ function GetboxId($boxUrl){
     }
 }
 
+
+//tananyag feloldása
 function UnlockBox($boxId, $password) {
     global $conn;
 
@@ -294,6 +359,8 @@ function UnlockBox($boxId, $password) {
     }
 }
 
+
+//felhasználó tananyagainak lekérése
 function GetUserBoxes(){
     global $conn;
 
@@ -315,6 +382,8 @@ function GetUserBoxes(){
     }
 }
 
+
+//felhasználó által még nem feloldott dobozok lekérdezése
 function GetLockedBoxes(){
     global $conn;
 
@@ -333,6 +402,8 @@ function GetLockedBoxes(){
     }
 }
 
+
+// kiválasztott doboz betöltése
 function LoadBox($boxName){
     global $conn;
 
