@@ -21,7 +21,7 @@
 </head>
 
 <body class="full-page">
-    <img src="<?php echo(BASE_URL); ?>/assets/images/unlock/csipcsipbox.jpg" alt="no-box-cover.jpg" class="background-image-unlock-page" id="box-cover">
+    <img src="<?php echo(BASE_URL); ?>/assets/images/unlock/horgobox.jpg" alt="no-box-cover.jpg" class="background-image-unlock-page" id="box-cover">
     <main class="bottom-right">
         <div class="login-container">
             <div class="inputs-container">
