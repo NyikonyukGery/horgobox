@@ -18,6 +18,9 @@ switch ($request) {
     case $sub . "/logout":
         require __DIR__ . "/logout.php";
         break;
+    case $sub . "/vasarlok":
+        require __DIR__ . "/views/vasarlok.php";
+        break;
     default:
         require __DIR__ . "/views/404.php";
         break;

@@ -6,6 +6,8 @@
 
     $requiredPermissions = array("ACCESS_ADMIN_DASHBOARD");
     CheckUserPermissions($requiredPermissions);
+
+    $statistics = GetStatistics();
 ?>
 
 <!DOCTYPE html>
@@ -28,11 +30,13 @@
 
     <main>
         <div>
-            
+            <h1>Statisztikák</h1>
         </div>
 
         <div>
-
+            <p>Regisztrált felhasználók: <?php echo($statistics['registeredUsers']); ?></p>
+            <p>Feloldott tananyagok: <?php echo($statistics['unlockedPatterns']); ?></p>
+            <p>Hírlevél feliratkozások: <?php echo($statistics['newsletterSignUp']); ?></p>
         </div>
 
         <div>

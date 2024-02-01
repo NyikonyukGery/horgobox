@@ -171,19 +171,45 @@ function UpdateUserData($familyName, $firstName, $username, $password){
     return json_encode(["response" => "error","error_title" => "Sikertelen módosítás!", "error_description" => "Sikertelen módosítás!"]);
 }
 
-
-//hírlevél feliratkozás
-function NewsletterSignUp() {
+//statisztikák lekérdezése
+function GetStatistics(){
     global $conn;
 
-    $userId = $_SESSION["userId"];
+    $statistics = array();
+    
+    //felhasználók száma
+    $query = "SELECT COUNT(`users`.`id`) AS 'registeredUsers' FROM `users`";
+    $response = $conn->query($query);
+    $statistics['registeredUsers'] = $response->fetch_assoc()['registeredUsers'];
 
-    $query = "UPDATE `admins` SET `admins`.`newsletter_sub` = true WHERE `admins`.`id` = $userId";
-    if($conn->query($query)){
-        return json_encode(["response" => "success"]);
-    } else {
-        return json_encode(["response" => "error","error_title" => "Sikertelen feliratkozás!", "error_description" => "A felhasználót nem tudtuk rögzítani!"]);
+    //feloldott dobozok lekérése
+    $query = "SELECT COUNT(`box_user`.`user_id`) AS 'unlockedBoxes' FROM `box_user`";
+    $response = $conn->query($query);
+    $statistics['unlockedPatterns'] = $response->fetch_assoc()['unlockedBoxes'];
+
+    //hírlevél feliratkozások
+    $query = "SELECT COUNT(`users`.`id`) AS 'newsletterSignUp' FROM `users` WHERE `users`.`newsletter_sub` = 1";
+    $response = $conn->query($query);
+    $statistics['newsletterSignUp'] = $response->fetch_assoc()['newsletterSignUp'];
+
+    return $statistics;
+}
+
+//felhasználók lekérdezése
+function GetUsers(){
+    global $conn;
+
+    $users = array();
+
+    //felhasználók lekérése
+    $query = "SELECT `users`.`id`, `users`.`familyName`, `users`.`firstName`, `users`.`username`, `users`.`email`, `users`.`registrationDate` FROM `users`";
+    $response = $conn->query($query);
+
+    while($record = $response->fetch_assoc()){
+        $users[] = $record;
     }
+
+    return $users;
 }
 
 
