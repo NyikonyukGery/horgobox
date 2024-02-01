@@ -1,5 +1,5 @@
 <?php
-    require_once("../setup.php");
+    require_once("setup.php");
     CheckSession();
 
     require_once(ROOT_PATH . "/app/database/databaseManager.php");
@@ -18,13 +18,13 @@
     <meta name="description" content="" />
 
     <!-- style -->
-    <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/admin.css">
+    <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/style.css">
     <!-- title -->
     <title>Vezérlőpult | Csipcsirip - Horgobox</title>
 </head>
 
 <body>
-    <?php require(ROOT_PATH . "/app/includes/adminNavigation.php") ?>
+    <?php require(ROOT_PATH . "/app/includes/navigation.php") ?>
 
     <main>
         <div>

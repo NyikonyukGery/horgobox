@@ -1,0 +1,4 @@
+AuthType Basic 
+AuthName "Belépsz halott ember vagy" 
+AuthUserFile ../../.htpasswd
+require valid-user

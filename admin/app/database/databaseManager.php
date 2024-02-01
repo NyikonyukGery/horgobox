@@ -4,8 +4,8 @@
 
 require_once(dirname(__DIR__, 2) . "/setup.php");
 require_once(ROOT_PATH . "/app/database/connect.php");
-require_once(ROOT_PATH . "/app/endpoints/mailer.php");
-require_once(ROOT_PATH . "/app/includes/mailGenerator.php");
+// require_once(ROOT_PATH . "/app/endpoints/mailer.php");
+// require_once(ROOT_PATH . "/app/includes/mailGenerator.php");
 
 
 //felhasználói jogosultságok ellenőrzése
@@ -15,7 +15,7 @@ function CheckUserPermissions($permissions) {
     if (!isset($_SESSION["userId"])){
         Redirect("bejelentkezes");
     } else {
-        $query = "SELECT `role_id` FROM `users` WHERE id = '" . $_SESSION["userId"] . "'";
+        $query = "SELECT `role_id` FROM `admins` WHERE id = '" . $_SESSION["userId"] . "'";
         $resp = $conn->query($query);
         $rowCount = $resp->num_rows;
         if ($rowCount == 0) {
@@ -53,131 +53,15 @@ function CheckLoginCredentials($email, $password){
         return json_encode(["response" => "success", "route" => BASE_URL]);
     }
 
-    $query = "SELECT `users`.`id`, `users`.`valid_email` FROM `users` WHERE BINARY `users`.`email` = BINARY '" . $email . "' AND BINARY `users`.`password` = BINARY '" . $password . "'";
+    $query = "SELECT `admins`.`id` FROM `admins` WHERE BINARY `admins`.`email` = BINARY '" . $email . "' AND BINARY `admins`.`password` = BINARY '" . $password . "'";
     $response = $conn->query($query);
     if($response->num_rows == 1){
         $record = $response->fetch_assoc();
-        if($record['valid_email']) {
-            $_SESSION["userId"] = $record['id'];
-            $_SESSION['login'] = true;
-            return json_encode(["response" => "success", "route" => BASE_URL]);
-        } else {
-            $_SESSION['userId'] = $record['id'];
-            return json_encode(["response" => "success", "route" => BASE_URL . "emailmegerosites"]);
-        }
+        $_SESSION["userId"] = $record['id'];
+        $_SESSION['adminLogin'] = true;
+        return json_encode(["response" => "success", "route" => BASE_URL]);
     } else{
         return json_encode(["response" => "error"]);
-    }
-}
-
-
-//felhasználó regisztráció
-function RegisterNewUser($familyName, $firstName, $username, $email, $password, $newsletter = "false"){
-    global $conn;
-
-    $query = "SELECT `users`.`id`, `users`.`email`, `users`.`username` FROM `users` WHERE `users`.`username` = '$username' OR `users`.`email` = '$email'";
-    $response = $conn->query($query);
-    if($response->num_rows != 0){
-        $record = $response->fetch_assoc();
-        if($record["email"] == $email){
-            return json_encode(["response" => "error", "error" => "Ezt az email címet már regisztrálták!"]);
-        } else if ($record["username"] == $username){
-            return json_encode(["response" => "error", "error" => "Ez a felhasználónév már foglalt!"]);
-        }
-    } else {
-        $query = "INSERT INTO `users` (`email`, `familyName`, `firstName`, `username`, `password`, `newsletter_sub`) VALUES ('$email', '$familyName', '$firstName', '$username', '$password', $newsletter)";
-        if($conn->query($query)){
-            $_SESSION['userId'] = $conn->insert_id;
-            
-            $code = str_pad(random_int(1, 999999), 6, '0', STR_PAD_LEFT);
-            $body = GenerateEmailVerification($code);
-            sendMail("no-reply@csipcsiripp.hu", $email, "Email megerősítéső kód", $body);
-            
-            $query = "INSERT INTO `validation_codes` (`user_id`, `validation_data`, `type`) VALUES (" . $_SESSION['userId'] .", '$code', 'email')";
-            $conn->query($query);
-
-            $query = "INSERT INTO `logs` (`user_id`, `type`, `ip`) VALUES (" . $_SESSION['userId'] . ", 'registration', '" . $_SERVER['REMOTE_ADDR'] . "')";
-            $conn->query($query);
-
-            return json_encode(["response" => "success", "route" => BASE_URL . "emailmegerosites"]);
-        } else {
-            return json_encode(["response" => "error", "error" => "A felhasználót nem sikerült létrehozni!"]);
-        }
-    }
-
-    return json_encode(["response" => "error", "error" => "Sikertelen regisztráció!"]);
-}
-
-
-//felhaszáló email megerősítésének ellenőrzése
-function EmailConfirmed(){
-    global $conn;
-
-    $userId = $_SESSION['userId'];
-
-    $query = "SELECT `users`.`valid_email` FROM `users` WHERE `users`.`id` = $userId";
-    $response = $conn->query($query);
-    if($response->num_rows > 0){
-        if($response->fetch_assoc()['valid_email']){
-            return true;
-        } else {
-            return false;
-        }
-    } else{
-        return false;
-    }
-}
-
-
-//Email megerősítő kód újraküldése
-function ResendEmailConfirmation(){
-    global $conn;
-
-    $userId = $_SESSION['userId'];
-    
-    $query = "DELETE FROM `validation_codes` WHERE `validation_codes`.`user_id` = $userId";
-    $conn->query($query);
-
-    $query = "SELECT `users`.`email` FROM `users` WHERE `id` = $userId";
-    $email = $conn->query($query)->fetch_assoc()['email'];
-    $code = str_pad(random_int(1, 999999), 6, '0', STR_PAD_LEFT);
-    $body = GenerateEmailVerification($code);
-    sendMail("no-reply@csipcsiripp.hu", $email, "Email megerősítése", $body);
-    
-    $query = "INSERT INTO `validation_codes` (`user_id`, `validation_data`, `type`) VALUES (" . $_SESSION['userId'] .", '$code', 'email')";
-    $conn->query($query);
-
-    return true;
-}
-
-
-//Email megerősítő kód ellenőrzése
-function CheckEmailConfirmationCode($code){
-    global $conn;
-
-    $userId = $_SESSION['userId'];
-
-    $query = "SELECT `validation_codes`.`validation_data`, `validation_codes`.`sentTime` FROM `validation_codes` WHERE `validation_codes`.`type` = 'email' AND `validation_codes`.`user_id` = $userId";
-    $response = $conn->query($query);
-    if($response->num_rows > 0){
-        $record = $response->fetch_assoc();
-        if($record['validation_data'] == $code){
-            $query = "DELETE FROM `validation_codes` WHERE `validation_codes`.`user_id` = $userId AND `type` = 'email'";
-            $conn->query($query);
-
-            $query = "UPDATE `users` SET `users`.`valid_email` = true WHERE `users`.`id` = $userId";
-            $conn->query($query);
-
-            $query = "INSERT INTO `logs` (`user_id`, `type`, `ip`) VALUES ($userId, 'confirmEmail', '" . $_SERVER['REMOTE_ADDR'] . "')";
-            $conn->query($query);
-
-            $_SESSION['login'] = true;
-            return json_encode(["response" => "success", "route" => BASE_URL]);
-        } else {
-            return json_encode(["response" => "error", "error_title" => "Hibás kód!", "error_description" => "Ismeretlen kódot adott meg!"]);
-        }
-    } else {
-        return json_encode(["response" => "error", "error_title" => "Hibás kód!", "error_description" => "Ismeretlen kódot adott meg!"]);
     }
 }
 
@@ -186,16 +70,16 @@ function CheckEmailConfirmationCode($code){
 function ResetPassword($email){
     global $conn;
 
-    $query = "SELECT `users`.`id` FROM `users` WHERE `users`.`email` = '$email'";
+    $query = "SELECT `admins`.`id` FROM `admins` WHERE `admins`.`email` = '$email'";
     $response = $conn->query($query);
     
     if($response->num_rows == 1){
         $userId = $response->fetch_assoc()['id'];
         $token = bin2hex(random_bytes(16));
         
-        $query = "INSERT INTO `validation_codes` (`user_id`, `validation_data`, `type`) VALUES ($userId, '$token', 'passwordReset')";
+        $query = "INSERT INTO `validation_codes` (`user_id`, `validation_data`, `type`) VALUES ($userId, '$token', 'adminPasswordReset')";
         if($conn->query($query)){
-            $query = "INSERT INTO `logs` (`user_id`, `type`, `ip`) VALUES ($userId, 'sendForgotPasswordEmail', '" . $_SERVER['REMOTE_ADDR'] . "')";
+            $query = "INSERT INTO `logs` (`user_id`, `type`, `ip`) VALUES ($userId, 'sendAdminForgotPasswordEmail', '" . $_SERVER['REMOTE_ADDR'] . "')";
             $conn->query($query);
 
             $body = GenerateForgotPassword($token, $userId);
@@ -218,7 +102,7 @@ function UpdatePassword($password, $token, $userId){
     $response = $conn->query($query);
     
     if($response->num_rows == 1){
-        $query = "UPDATE `users` SET `users`.`password` = '$password' WHERE `users`.`id` = $userId";
+        $query = "UPDATE `admins` SET `admins`.`password` = '$password' WHERE `admins`.`id` = $userId";
         if($conn->query($query)){
             $query = "DELETE FROM `validation_codes` WHERE `validation_codes`.`user_id` = $userId AND `validation_codes`.`validation_data` = '$token'";
             $conn->query($query);
@@ -226,7 +110,7 @@ function UpdatePassword($password, $token, $userId){
             $query = "INSERT INTO `logs` (`user_id`, `type`, `ip`) VALUES ($userId, 'updateForgotPassword', '" . $_SERVER['REMOTE_ADDR'] . "')";
             $conn->query($query);
 
-            $query = "SELECT `users`.`email` FROM `users` WHERE `users`.`id` = $userId";
+            $query = "SELECT `admins`.`email` FROM `admins` WHERE `admins`.`id` = $userId";
             $email = $conn->query($query)->fetch_assoc()['email'];
             $body = GenerateForgotPasswordSuccess();
             sendMail("no-reply@csipcsiripp.hu", $email, "Sikeres jelszóváltoztatás", $body);
@@ -246,7 +130,7 @@ function GetUserData() {
 
     $userId = $_SESSION["userId"];
 
-    $query = "SELECT `users`.`familyName`, `users`.`firstName`, `users`.`username`, `users`.`email`, `users`.`newsletter_sub` FROM `users` WHERE `users`.`id` = $userId";
+    $query = "SELECT `admins`.`familyName`, `admins`.`firstName`, `admins`.`username`, `admins`.`email`, `admins`.`newsletter_sub` FROM `admins` WHERE `admins`.`id` = $userId";
     $response = $conn->query($query);
     if($response->num_rows == 1) {
         $record = $response->fetch_assoc();
@@ -263,13 +147,13 @@ function UpdateUserData($familyName, $firstName, $username, $password){
 
     $userId = $_SESSION["userId"];
 
-    $query = "SELECT `users`.`id` FROM `users` WHERE `users`.`username` = '$username'";
+    $query = "SELECT `admins`.`id` FROM `admins` WHERE `admins`.`username` = '$username'";
     $response = $conn->query($query);
     $record = $response->fetch_assoc();
     if(($response->num_rows == 1 && $record["id"] == $userId) || ($response->num_rows == 0)){
-        $query = "UPDATE `users` SET `familyName` = '$familyName', `firstName` = '$firstName', `username` = '$username', `password` = '$password' WHERE `users`.`id` = $userId";
+        $query = "UPDATE `admins` SET `familyName` = '$familyName', `firstName` = '$firstName', `username` = '$username', `password` = '$password' WHERE `admins`.`id` = $userId";
         if($conn->query($query)){
-            $query = "SELECT `users`.`familyName`, `users`.`firstName`, `users`.`username`, `users`.`email`, `users`.`newsletter_sub` FROM `users` WHERE `users`.`id` = $userId";
+            $query = "SELECT `admins`.`familyName`, `admins`.`firstName`, `admins`.`username`, `admins`.`email`, `admins`.`newsletter_sub` FROM `admins` WHERE `admins`.`id` = $userId";
             $response = $conn->query($query);
             $record = $response->fetch_assoc();
 
@@ -294,7 +178,7 @@ function NewsletterSignUp() {
 
     $userId = $_SESSION["userId"];
 
-    $query = "UPDATE `users` SET `users`.`newsletter_sub` = true WHERE `users`.`id` = $userId";
+    $query = "UPDATE `admins` SET `admins`.`newsletter_sub` = true WHERE `admins`.`id` = $userId";
     if($conn->query($query)){
         return json_encode(["response" => "success"]);
     } else {

@@ -1,0 +1,587 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo&family=Inter:wght@400;600;700&display=swap');
+* {
+    /* defining custom variables */
+    --primary-color: #f4c430;
+    --secondary-color: #ffffff;
+    --font-color: #000000;
+    --extra-color: #00000075;
+    --box-shadow-color: #00000050;
+    --error-color: #f43030;
+    --success-color: #5bf430;
+    --heading-font-family: 'Inter', sans-serif;
+    --paragraph-font-family: 'Archivo', sans-serif;
+    --border-radius: 7px;
+    --max-content-width: 1270px;
+    /* setting default values */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* BODY */
+
+body {
+    background-image: url("../images/static/horgoHatter.png");
+}
+
+
+/* defining heading elements */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--heading-font-family);
+}
+
+
+/* defining other text elements */
+
+p,
+a,
+label {
+    font-family: var(--paragraph-font-family);
+}
+
+a {
+    text-decoration: none;
+    color: var(--font-color);
+}
+
+a.btn {
+    background-color: var(--primary-color);
+    padding: 10px 30px;
+    border-radius: var(--border-radius);
+    outline: solid 2px var(--primary-color);
+    transition: 100ms ease;
+    text-align: center;
+}
+
+a.btn:hover,
+a.btn:focus {
+    background-color: var(--secondary-color);
+}
+
+
+/* navigation style */
+
+nav {
+    background-color: var(--primary-color);
+    margin-bottom: 50px;
+}
+
+nav div.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: var(--max-content-width);
+    margin: auto;
+}
+
+nav div.logo-container {
+    height: 100px;
+}
+
+nav div.logo-container>a {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+nav div.logo-container a>img {
+    height: 80%;
+}
+
+nav div.link-container {
+    display: flex;
+    gap: 60px;
+    font-size: 1.5rem;
+}
+
+nav div.link-container a {
+    position: relative;
+}
+
+nav div.link-container>a:hover,
+nav div.link-container>a:focus {
+    text-decoration: underline;
+}
+
+nav div.link-container>a>span {
+    transform: translateX(50%);
+    display: none;
+    position: absolute;
+    top: 35px;
+    right: 50%;
+}
+
+nav div.link-container>a:hover>span {
+    display: block;
+}
+
+
+/* general styles for pages */
+
+main {
+    width: 100%;
+    max-width: var(--max-content-width);
+    margin: 0 auto 50px auto;
+}
+
+main>h1,
+main>div>h1 {
+    margin-bottom: 20px;
+}
+
+
+/* patterns page style */
+
+.patterns-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 30px;
+    grid-auto-rows: auto;
+    margin-bottom: 50px;
+}
+
+.pattern {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 1px 2px 10px var(--box-shadow-color);
+    aspect-ratio: 3/4.3;
+    background-color: var(--secondary-color);
+}
+
+.pattern .img-container {
+    width: 100%;
+}
+
+.pattern .img-container img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+
+.pattern .description {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+.pattern .description a.btn {
+    width: fit-content;
+    margin: 0 auto;
+}
+
+
+/* LOGIN & REGISTER */
+
+main.center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    margin-top: 50px;
+    max-width: var(--max-content-width);
+}
+
+.login-container {
+    width: min-content;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    border-radius: var(--border-radius);
+    background-color: var(--secondary-color);
+    padding: 20px;
+    box-shadow: 1px 2px 10px var(--box-shadow-color);
+    text-wrap: balance;
+}
+
+.login-container>.logo-container {
+    height: 100px;
+    padding-bottom: 30px;
+    box-sizing: unset;
+}
+
+.login-container>.logo-container>img {
+    height: 100%;
+}
+
+.login-container>.inputs-container {
+    font-size: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-container>.inputs-container>.text-container p {
+    margin-top: 15px;
+    font-size: 1rem;
+    line-height: 130%;
+}
+
+.login-container>.inputs-container input {
+    padding: 10px 30px;
+    border-radius: var(--border-radius);
+    border: solid 2px var(--font-color);
+    background-color: var(--secondary-color);
+    font-size: 1.2rem;
+    width: 100%;
+}
+
+.login-container>.inputs-container input::placeholder {
+    color: var(--extra-color);
+}
+
+.login-container>.inputs-container .checkbox label {
+    font-size: 1rem;
+    margin-left: 10px;
+}
+
+.login-container>.inputs-container .checkbox input {
+    display: inline-block;
+    width: fit-content;
+}
+
+.login-container>.inputs-container .checkbox label>a {
+    color: var(--primary-color) !important;
+}
+
+.login-container .error-container {
+    display: none;
+    color: var(--error-color);
+    font-size: 1rem;
+    text-align: center;
+    margin: -10px 0;
+}
+
+.login-container>.otheroption {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.login-container>.otheroption>div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.login-container>.otheroption>div.normal>a {
+    color: var(--extra-color);
+}
+
+.login-container>.otheroption p {
+    color: var(--extra-color);
+}
+
+.login-container>.otheroption a {
+    color: var(--primary-color);
+}
+
+.login-container>.button-container button {
+    width: 100%;
+    font-size: 1.2rem;
+    border: none;
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius);
+    padding: 10px 30px;
+    outline: solid 2px var(--primary-color);
+    transition: 100ms ease;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.login-container>.button-container button:hover,
+.login-container>.button-container button:focus {
+    background-color: var(--secondary-color);
+}
+
+
+/* UNLOCK PATTERN */
+
+body.full-page {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    max-width: var(--max-content-width);
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.background-image-unlock-page {
+    width: 100%;
+    max-width: var(--max-content-width);
+    height: auto;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+main.bottom-right {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: fit-content;
+}
+
+.bottom-right>.login-container {
+    width: fit-content;
+}
+
+.message-popup-container {
+    display: block;
+    position: absolute;
+    right: 20px;
+    top: 120px;
+    width: 300px;
+    height: fit-content;
+}
+
+.message-popup-container.white .popup {
+    background-color: var(--secondary-color);
+    border-width: 2px;
+}
+
+.popup {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+    height: fit-content;
+    padding: 10px;
+    border-radius: var(--border-radius);
+}
+
+.popup.error {
+    border: 1px solid var(--error-color);
+}
+
+.popup.success {
+    border: 1px solid var(--success-color);
+}
+
+.popup .message-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.popup .message-description {
+    font-size: 0.9rem;
+    font-weight: normal;
+    text-wrap: balance;
+}
+
+
+/* FELHASZNÁLÓI PROFIL */
+
+h1.center {
+    margin: 0 auto;
+    width: fit-content;
+    text-align: center;
+}
+
+section {
+    margin: 0 auto 30px;
+    width: fit-content;
+}
+
+section h2 {
+    margin-bottom: 10px;
+}
+
+.user-detail-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: fit-content;
+    margin: auto;
+}
+
+.user-detail-container>div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.user-detail-container>div input {
+    padding: 5px 20px;
+    border-radius: var(--border-radius);
+    border: solid 2px var(--font-color);
+    background-color: var(--secondary-color);
+    font-size: 1rem;
+    width: 100%;
+}
+
+.user-detail-container>.button-container button {
+    width: 100%;
+    font-size: 1.1rem;
+    border: none;
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius);
+    padding: 5px 20px;
+    outline: solid 2px var(--primary-color);
+    transition: 100ms ease;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.user-detail-container>.button-container button:hover,
+.user-detail-container>.button-container button:focus {
+    background-color: var(--secondary-color);
+}
+
+
+/* BOXOK */
+
+div.title {
+    margin-bottom: 30px;
+    font-size: 110%;
+}
+
+.videos-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: auto;
+    column-gap: 20px;
+    row-gap: 40px;
+    margin-bottom: 50px;
+}
+
+.videos-container .video iframe {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+}
+
+.offline-resources {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    width: fit-content;
+    gap: 20px;
+}
+
+.offline-resources .offline-resource a {
+    display: block;
+}
+
+
+/* RESPONSIVE STYLE */
+
+
+/* 
+FONTOS 
+ - CSAK 3 BOX JELENIK MEG 4 HELYETT ÁTMENETILEG
+*/
+
+
+/* 
+RESZPONZÍV OLDALAK 
+ - FŐOLDAL
+ - NAVIGÁCIÓ
+ - PROFIL
+ - BEJELENTKEZÉS
+ - REGISZTRÁCIÓ
+ - BOX
+ - 404
+ 
+
+KELL MÉG
+ - AKTIVÁLÁS
+*/
+
+@media only screen and (width <=1300px) {
+    nav {
+        padding: 0 20px;
+    }
+    main {
+        padding: 0 20px;
+    }
+    .pattern {
+        aspect-ratio: 3/4.4;
+    }
+}
+
+@media only screen and (width <=1100px) {
+    .patterns-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .pattern {
+        aspect-ratio: 3/4.3;
+    }
+}
+
+@media only screen and (width <=900px) {
+    .patterns-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .pattern {
+        aspect-ratio: 3/4;
+    }
+}
+
+@media only screen and (width <=750px) {
+    .pattern {
+        aspect-ratio: 3/4.2;
+    }
+    .videos-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media only screen and (width <=650px) {
+    .pattern {
+        aspect-ratio: 3/4.4;
+    }
+}
+
+@media only screen and (width <=600px) {
+    .patterns-container {
+        grid-template-columns: 1fr;
+    }
+    .pattern {
+        aspect-ratio: 3/4;
+    }
+    nav div.link-container {
+        gap: 30px;
+    }
+}
+
+@media only screen and (width <=480px) {
+    nav div.logo-container {
+        height: 90px;
+    }
+    nav div.nav-container {
+        flex-direction: column;
+        row-gap: 5px;
+        padding-bottom: 5px
+    }
+    nav div.link-container {
+        gap: 60px;
+    }
+    main.center {
+        width: 100%;
+        padding: 0;
+    }
+    .login-container {
+        width: 100%;
+    }
+    .login-container>.logo-container {
+        height: auto;
+        width: 100%;
+    }
+    .login-container>.logo-container>img {
+        height: unset;
+        width: 100%;
+    }
+}

@@ -33,6 +33,8 @@ switch ($request) {
     case (preg_match("/\/jelszo-visszaallitas?.*/", $request) ? true : false):
         require __DIR__ . "/views/jelszovisszaallitas.php";
         break;
+    case "/admin/vezerlopult":
+        require __DIR__ . "/admin/views/vezerlopult.php";
     default:
         require __DIR__ . "/views/404.php";
         break;

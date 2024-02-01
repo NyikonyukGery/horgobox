@@ -1,12 +1,12 @@
 <?php require_once("setup.php"); 
 
-//bejelentkezett felhaszálót automatikusan továbbirányítja a főoldalra
-if(isset($_SESSION['login']) && $_SESSION['login']){
+// bejelentkezett felhaszálót automatikusan továbbirányítja a főoldalra
+if(isset($_SESSION['adminLogin']) && $_SESSION['adminLogin']){
     header("location: " .BASE_URL);
 }
 
-if(isset($_SESSION['adminLogin'])){
-    unset($_SESSION['adminLogin']);
+if(isset($_SESSION['login'])){
+    unset($_SESSION['login']);
     unset($_SESSION['userId']);
 }
 
@@ -48,10 +48,6 @@ if(isset($_SESSION['adminLogin'])){
                 </div>
             </div>
             <div class="otheroption">
-                <div>
-                    <p>Még nincs felhasználód?</p>
-                    <a href="<?php echo(BASE_URL . "regisztracio"); ?>">Regisztráció</a>
-                </div>
                 <div class="normal">
                     <a href="<?php echo(BASE_URL . "elfelejtett-jelszo"); ?>">Elfelejtett jelszó</a>
                 </div>
