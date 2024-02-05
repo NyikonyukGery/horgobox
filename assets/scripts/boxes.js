@@ -1,9 +1,5 @@
 var boxId;
 
-function GetBoxes() {
-
-}
-
 function GetBox() {
     var request = new XMLHttpRequest();
     request.open("POST", "/app/endpoints/boxes.php");
@@ -18,6 +14,7 @@ function GetBox() {
         console.log(jsonResponse);
         if (jsonResponse.response == "error") {
             ShowPopupMessage(jsonResponse.error_title, jsonResponse.error_description, "error", 10);
+
             setTimeout(() => {
                 window.location.replace(jsonResponse.route);
             }, 5000);

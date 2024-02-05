@@ -19,6 +19,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="" />
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="<?php echo(BASE_URL); ?>/assets/images/static/favicon.ico">
+
     <!-- style -->
     <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/style.css">
     <!-- title -->

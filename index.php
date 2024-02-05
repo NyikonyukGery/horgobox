@@ -1,6 +1,12 @@
 <?php
 $request = explode('.', $_SERVER['REQUEST_URI'])[0];
 
+$maintenance = false;
+
+if($maintenance){
+    require __DIR__ . '/views/karbantartas.php';
+    return;
+}
 
 switch ($request) {
 	case "/felhasznalo":

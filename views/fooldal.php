@@ -16,10 +16,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="" />
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="<?php echo(BASE_URL); ?>/assets/images/static/favicon.ico">
+
     <!-- style -->
     <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/style.css">
     <!-- title -->
-    <title>Mintáim | Csipcsirip - Horgobox</title>
+    <title>Tananyagok | Csipcsirip - Horgobox</title>
 </head>
 
 <body>
@@ -55,7 +58,7 @@
         </div>
 
         <div>
-            <h1>Feloldatlan tananyagok</h1>
+            <h1>Feloldásra váró tananyagok</h1>
             <?php if($lockedBoxes == false){
                 echo('<p id="futher-boxes-message">Az összes tananyagot feloldottad már! Hamarosan érkeznek újak!</p>');
             }

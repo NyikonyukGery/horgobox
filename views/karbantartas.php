@@ -17,7 +17,7 @@
     <!-- style -->
     <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/style.css">
     <!-- title -->
-    <title>A keresett oldal nem található | Csipcsirip - Horgobox</title>
+    <title>Karbantartás | Csipcsirip - Horgobox</title>
 </head>
 
 <body>
@@ -26,8 +26,8 @@
             <div class="logo-container">
                 <img src="<?php echo(BASE_URL); ?>/assets/images/static/csipcsiripp_logo.png" alt="csipcsiripp logo">
             </div>
-            <h1 class="center">A keresett oldal nem található!</h1>
-            <a href="<?php echo(BASE_URL); ?>" class="btn">Vissza a főoldalra</a>
+            <h1 class="center">Az oldal jelenleg karbantartás alatt áll!</h1>
+            <p style="text-wrap: unset; text-align: center;">Kérjük türelmét és megértését, ameddig a karbantartás befejeződik!</p>
         </div>
     </main>
 </body>

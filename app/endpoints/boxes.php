@@ -14,7 +14,7 @@ if(!IS_AJAX && !strpos($_SERVER['HTTP_REFERER'],getenv('HTTP_HOST'))) {
     if($jsonData->method == "unlockBox"){
         if(strlen($jsonData->password) > 7){
             require_once(ROOT_PATH . "/app/database/databaseManager.php");
-            if(UnlockBox(htmlspecialchars($jsonData->boxId), htmlspecialchars($jsonData->password))){
+            if(UnlockBox(htmlspecialchars($jsonData->boxId), htmlspecialchars(strtoupper($jsonData->password)))){
                 echo(json_encode(["response" => "success", "route" => BASE_URL]));
             } else {
                 echo(json_encode(["response" => "error", "error_title" => "Hibás jelszó!", "error_description" => "A megadott jelszó nem található!"]));
