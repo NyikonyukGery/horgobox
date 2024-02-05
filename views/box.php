@@ -27,7 +27,7 @@
     <!-- style -->
     <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/style.css">
     <!-- title -->
-    <title>tananyag | Csipcsirip - Horgobox</title>
+    <title><?php echo($boxData['box'][0]['name']); ?> - tananyag | Csipcsirip - Horgobox</title>
 </head>
 
 <body>
