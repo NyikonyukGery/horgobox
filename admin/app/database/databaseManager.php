@@ -212,6 +212,22 @@ function GetUsers(){
     return $users;
 }
 
+function GetBoxes(){
+    global $conn;
+    
+    $boxes = array();
+
+    //tananyagok lekérdezése
+    $query = "SELECT `boxes`.`id`, `boxes`.`name`, `images`.`url` AS 'image_url', `images`.`title`AS 'image_title' FROM `boxes` INNER JOIN (`box_image` INNER JOIN `images` ON `images`.`id` = `box_image`.`image_id`) ON `box_image`.`box_id` = `boxes`.`id` WHERE `images`.`type` = 'cover';";
+    $response = $conn->query($query);
+
+    while($record = $response->fetch_assoc()){
+        $boxes[] = $record;
+    }
+    
+    return $boxes;
+}
+
 
 //tananyag id lekérése név alapján
 function GetboxId($boxUrl){

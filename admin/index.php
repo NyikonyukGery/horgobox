@@ -21,6 +21,9 @@ switch ($request) {
     case $sub . "/vasarlok":
         require __DIR__ . "/views/vasarlok.php";
         break;
+    case $sub . "/tananyagok":
+        require __DIR__ . "/views/tananyagok.php";
+        break;
     default:
         require __DIR__ . "/views/404.php";
         break;

@@ -9,6 +9,7 @@ if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
 
 define("ROOT_PATH", realpath(dirname(__FILE__)));
 define("BASE_URL", "http://horgobox.local/admin/");
+define("ASSETS_URL", "http://horgobox.local/assets/");
 // define("BASE_URL", "https://horgobox.csipcsiripp.hu");
 // define("BASE_URL", "http://localhost/");
 

@@ -5,9 +5,10 @@ if(isset($_SESSION['adminLogin']) && $_SESSION['adminLogin']){
     header("location: " .BASE_URL);
 }
 
-if(isset($_SESSION['login'])){
-    unset($_SESSION['login']);
-    unset($_SESSION['userId']);
+if(isset($_SESSION['login']) || isset($_SESSION['userId'])){
+    session_unset();
+    session_destroy();
+    session_start();
 }
 
 ?>

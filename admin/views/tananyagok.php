@@ -4,10 +4,10 @@
 
     require_once(ROOT_PATH . "/app/database/databaseManager.php");
 
-    $requiredPermissions = array("ACCESS_USERS");
+    $requiredPermissions = array("ACCESS_BOXES");
     CheckUserPermissions($requiredPermissions);
 
-    $users = GetUsers();
+    $boxes = GetBoxes();
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +22,7 @@
     <!-- style -->
     <link rel="stylesheet" href="<?php echo(BASE_URL); ?>/assets/css/style.css">
     <!-- title -->
-    <title>Felhasználók | Csipcsirip - Horgobox</title>
+    <title>Tananyagok | Csipcsirip - Horgobox</title>
 </head>
 
 <body>
@@ -30,7 +30,7 @@
 
     <main>
         <div>
-            <h1>Vásárlók</h1>
+            <h1>Tananyagok</h1>
         </div>
 
         <div>
@@ -38,23 +38,20 @@
                 <thead>
                     <tr>
                         <td>#</td>
+                        <td>Borító</td>
                         <td>Név</td>
-                        <td>Felhasználónév</td>
-                        <td>Email</td>
-                        <td>Regisztráció</td>
                     </tr>
                 </thead>
                 <tbody>
+                    
                     <?php 
                         $counter = 1;
-                        foreach($users as $user){
+                        foreach($boxes as $box){
                             echo("
-                                <tr onclick='location.href=" . BASE_URL . "vasarlo?id=" . $user['id'] . "'>
+                                <tr onclick='location.href=" . BASE_URL . "box?id=" . $box['id'] . "'>
                                     <td>$counter</td>
-                                    <td>" . $user['familyName'] . " " . $user['firstName'] . "</td>
-                                    <td>" . $user['username'] . "</td>
-                                    <td>" . $user['email'] . "</td>
-                                    <td>" . $user['registrationDate'] . "</td>
+                                    <td><img src='" . ASSETS_URL . "images" . $box['image_url'] . "' alt='" . $box['image_title'] . "'></td>
+                                    <td>" . $box['name'] . "</td>
                                 </tr>
                             ");
                             $counter++;
