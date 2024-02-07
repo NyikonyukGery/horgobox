@@ -10,10 +10,9 @@ function SendPasswordReset() {
         request.send(sendJson);
 
         request.onload = function() {
-            console.log(request.response);
             var jsonResponse = JSON.parse(request.response);
             if (jsonResponse.response == "error") {
-                ShowPopupMessage(jsonResponse.error_title, jsonResponse.error_description);
+                ShowPopupMessage(jsonResponse.error_title, jsonResponse.error_description, 5);
             } else if (jsonResponse.response == "success") {
                 ShowPopupMessage("Kód elküldve!", "Ellenőrizze emailjét! Előfordulhat, hogy a spam mappában találod!",
                     "success", 10);
@@ -36,10 +35,9 @@ function SendNewPassword() {
         request.send(sendJson);
 
         request.onload = function() {
-            console.log(request.response);
             var jsonResponse = JSON.parse(request.response);
             if (jsonResponse.response == "error") {
-                ShowPopupMessage(jsonResponse.error_title, jsonResponse.error_description);
+                ShowPopupMessage(jsonResponse.error_title, jsonResponse.error_description, "error", 7);
             } else if (jsonResponse.response == "success") {
                 ShowPopupMessage("Jelszó frissítve!", "Hamarosan átirányítunk!", "success", 10);
                 setTimeout(() => {
@@ -48,6 +46,6 @@ function SendNewPassword() {
             }
         }
     } else {
-        ShowPopupMessage("Hibás jelszó!", "Tartalmaznia kell számot, kis- és nagybetűt, különleges karakter!\nLegalább 8 karakternek kell lennie!");
+        ShowPopupMessage("Hibás jelszó!", "Tartalmaznia kell számot, kis- és nagybetűt, különleges karakter!\nLegalább 8 karakternek kell lennie!", "error", 7);
     }
 }

@@ -11,7 +11,6 @@ function GetBox() {
 
     request.onload = function() {
         var jsonResponse = JSON.parse(request.response);
-        console.log(jsonResponse);
         if (jsonResponse.response == "error") {
             ShowPopupMessage(jsonResponse.error_title, jsonResponse.error_description, "error", 10);
 
@@ -43,7 +42,6 @@ function UnlockBox() {
         request.send(sendJson);
 
         request.onload = function() {
-            console.log(request.response);
             var jsonResponse = JSON.parse(request.response);
 
             if (jsonResponse.response == "error") {

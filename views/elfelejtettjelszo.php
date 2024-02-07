@@ -52,7 +52,7 @@
     </main>
 
 
-    <div class="message-popup-container" id="message-popup-container">
+    <div class="message-popup-container white" id="message-popup-container">
         
     </div>
 

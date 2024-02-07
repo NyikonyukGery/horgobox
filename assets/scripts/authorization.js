@@ -9,7 +9,7 @@ function LoginUser() {
         request.open("POST", "/app/validation/loginFormValidation.php");
         request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-        var sendJson = JSON.stringify({ "method": "login", "user": { "email": encodeURI(email), "password": encodeURI(password) } });
+        var sendJson = JSON.stringify({ "method": "login", "user": { "email": email, "password": password } });
         request.send(sendJson);
 
         request.onload = function() {

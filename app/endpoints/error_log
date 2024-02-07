@@ -1,0 +1,69 @@
+[05-Feb-2024 21:38:20 Europe/Budapest] PHP Warning:  Undefined array key "HTTP_REFERER" in /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/boxes.php on line 10
+[05-Feb-2024 21:38:20 Europe/Budapest] PHP Deprecated:  strpos(): Passing null to parameter #1 ($haystack) of type string is deprecated in /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/boxes.php on line 10
+[06-Feb-2024 12:27:51 Europe/Budapest] PHP Warning:  Undefined array key "userId" in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 163
+[06-Feb-2024 12:27:51 Europe/Budapest] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1 in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php:166
+Stack trace:
+#0 /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php(166): mysqli->query()
+#1 /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/userData.php(81): CheckEmailConfirmationCode()
+#2 {main}
+  thrown in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 166
+[06-Feb-2024 12:27:53 Europe/Budapest] PHP Warning:  Undefined array key "userId" in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 163
+[06-Feb-2024 12:27:53 Europe/Budapest] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1 in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php:166
+Stack trace:
+#0 /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php(166): mysqli->query()
+#1 /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/userData.php(81): CheckEmailConfirmationCode()
+#2 {main}
+  thrown in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 166
+[06-Feb-2024 12:27:58 Europe/Budapest] PHP Warning:  Undefined array key "userId" in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 163
+[06-Feb-2024 12:27:58 Europe/Budapest] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1 in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php:166
+Stack trace:
+#0 /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php(166): mysqli->query()
+#1 /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/userData.php(81): CheckEmailConfirmationCode()
+#2 {main}
+  thrown in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 166
+[06-Feb-2024 12:28:04 Europe/Budapest] PHP Warning:  Undefined array key "userId" in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 163
+[06-Feb-2024 12:28:04 Europe/Budapest] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1 in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php:166
+Stack trace:
+#0 /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php(166): mysqli->query()
+#1 /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/userData.php(81): CheckEmailConfirmationCode()
+#2 {main}
+  thrown in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 166
+[06-Feb-2024 12:28:12 Europe/Budapest] PHP Warning:  Undefined array key "userId" in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 141
+[06-Feb-2024 12:28:12 Europe/Budapest] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1 in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php:144
+Stack trace:
+#0 /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php(144): mysqli->query()
+#1 /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/userData.php(75): ResendEmailConfirmation()
+#2 {main}
+  thrown in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 144
+[06-Feb-2024 12:28:44 Europe/Budapest] PHP Warning:  Undefined array key "userId" in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 163
+[06-Feb-2024 12:28:44 Europe/Budapest] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1 in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php:166
+Stack trace:
+#0 /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php(166): mysqli->query()
+#1 /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/userData.php(81): CheckEmailConfirmationCode()
+#2 {main}
+  thrown in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 166
+[06-Feb-2024 12:28:48 Europe/Budapest] PHP Warning:  Undefined array key "userId" in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 163
+[06-Feb-2024 12:28:48 Europe/Budapest] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1 in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php:166
+Stack trace:
+#0 /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php(166): mysqli->query()
+#1 /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/userData.php(81): CheckEmailConfirmationCode()
+#2 {main}
+  thrown in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 166
+[06-Feb-2024 12:29:10 Europe/Budapest] PHP Warning:  Undefined array key "userId" in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 163
+[06-Feb-2024 12:29:10 Europe/Budapest] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1 in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php:166
+Stack trace:
+#0 /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php(166): mysqli->query()
+#1 /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/userData.php(81): CheckEmailConfirmationCode()
+#2 {main}
+  thrown in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 166
+[06-Feb-2024 12:30:11 Europe/Budapest] PHP Warning:  Undefined array key "userId" in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 163
+[06-Feb-2024 12:30:11 Europe/Budapest] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1 in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php:166
+Stack trace:
+#0 /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php(166): mysqli->query()
+#1 /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/userData.php(81): CheckEmailConfirmationCode()
+#2 {main}
+  thrown in /home/fotoment/horgobox.csipcsiripp.hu/app/database/databaseManager.php on line 166
+[06-Feb-2024 19:24:42 Europe/Budapest] PHP Warning:  Undefined property: stdClass::$boxId in /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/boxes.php on line 17
+[06-Feb-2024 19:24:42 Europe/Budapest] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/boxes.php on line 17
+[06-Feb-2024 20:36:12 Europe/Budapest] PHP Warning:  Undefined property: stdClass::$boxId in /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/boxes.php on line 17
+[06-Feb-2024 20:36:12 Europe/Budapest] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/fotoment/horgobox.csipcsiripp.hu/app/endpoints/boxes.php on line 17

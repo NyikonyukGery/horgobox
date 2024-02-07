@@ -69,6 +69,10 @@ function GenerateForgotPassword($token, $userId){
                 <a href="' . BASE_URL .'jelszo-visszaallitas?token=' . $token . '&user=' . $userId . '" class="btn">Jelszó visszaállítása</a>
             </tr>
             <tr>
+                <p>A gomb hiányában kérlek másold a böngészőbe az alábbi linket.</p>
+                <p>' . BASE_URL .'jelszo-visszaallitas?token=' . $token . '&user=' . $userId . '</p>
+            </tr>
+            <tr>
                 <td>Amennyiben nem te kérted a helyreállítást, kérlek hagyd filgyelmen kívül az emailt.</td>
             </tr>
             <tr class="primary-background footer">

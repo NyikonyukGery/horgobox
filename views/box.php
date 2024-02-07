@@ -61,7 +61,7 @@
         </div>
 
         <div>
-            <h1>Letölthető anyagok</h1>
+            <h1>Letölthető horgolási minták</h1>
         </div>
         <div class="offline-resources">
             <?php
@@ -70,7 +70,7 @@
                     foreach($downloads as $download){
                         echo('
                             <div class="offline-resource">
-                                <a href="/resources' . $download["url"] . '" class="btn">' . $download["visible_name"] . '</a>
+                                <a href="/resources' . $download["url"] . '" target="blank" class="btn">' . $download["visible_name"] . '</a>
                             </div>
                         ');
                     }

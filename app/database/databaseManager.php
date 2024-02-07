@@ -1,6 +1,11 @@
 <?php
 
 //kizárólag másik php file hívhatja meg!
+if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
+    http_response_code(403);
+    exit();
+}
+
 
 require_once(dirname(__DIR__, 2) . "/setup.php");
 require_once(ROOT_PATH . "/app/database/connect.php");
@@ -384,7 +389,7 @@ function GetLockedBoxes(){
 
     $userId = $_SESSION['userId'];
 
-    $query = "SELECT `boxes`.`name` AS 'box_name', `boxes`.`url` AS box_url, `images`.`url` AS 'image_url', `images`.`title` AS 'image_title' FROM `boxes` LEFT JOIN `box_user` ON `boxes`.`id` = `box_user`.`box_id` INNER JOIN `box_image`ON `box_image`.`box_id` = `boxes`.`id` INNER JOIN `images` ON `images`.`id` = `box_image`.`image_id` WHERE `images`.`type` = 'cover' AND `boxes`.`id` NOT IN (SELECT `box_user`.`box_id` FROM `box_user` WHERE `box_user`.`user_id` = $userId)";
+    $query = "SELECT DISTINCT `boxes`.`name` AS 'box_name', `boxes`.`url` AS box_url, `images`.`url` AS 'image_url', `images`.`title` AS 'image_title' FROM `boxes` LEFT JOIN `box_user` ON `boxes`.`id` = `box_user`.`box_id` INNER JOIN `box_image`ON `box_image`.`box_id` = `boxes`.`id` INNER JOIN `images` ON `images`.`id` = `box_image`.`image_id` WHERE `images`.`type` = 'cover' AND `boxes`.`id` NOT IN (SELECT `box_user`.`box_id` FROM `box_user` WHERE `box_user`.`user_id` = $userId)";
     $response = $conn->query($query);
     if($response->num_rows > 0){
         $lockedBoxes = array();

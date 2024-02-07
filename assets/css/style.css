@@ -300,7 +300,6 @@ body.full-page {
     width: 100vw;
     max-width: var(--max-content-width);
     margin: 0 auto;
-    overflow: hidden;
 }
 
 body.full-page.center {
@@ -463,6 +462,7 @@ div.title {
     width: 100%;
     height: auto;
     aspect-ratio: 16/9;
+    padding-top: 10px;
 }
 
 .offline-resources {
