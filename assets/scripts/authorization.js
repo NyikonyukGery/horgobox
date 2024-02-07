@@ -66,3 +66,15 @@ function RegisterUser() {
         }
     }
 }
+
+function HidePopup() {
+    document.getElementById("popup-container").remove();
+}
+
+function HidePopupForever() {
+    var someDate = new Date();
+    var numberOfDaysToAdd = 100;
+    var result = someDate.setDate(someDate.getDate() + numberOfDaysToAdd);
+    document.cookie = "HIDELOGINPOPUP=true, expires=" + new Date(result);
+    document.getElementById("popup-container").remove();
+}
