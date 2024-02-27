@@ -6,8 +6,9 @@
         </div>
         <div class="link-container">
             <a href="<?php echo(BASE_URL . "tananyagok"); ?>"><i class="fa-solid fa-book"></i> <span> Tananyagok</span></a>
-            <a href="<?php echo(BASE_URL . "vasarlok"); ?>"><i class="fa-solid fa-users"></i><span> Felhasználók</span></a>
+            <a href="<?php echo(BASE_URL . "felhasznalok"); ?>"><i class="fa-solid fa-users"></i><span> Felhasználók</span></a>
             <a href="<?php echo(BASE_URL . "statisztikak"); ?>"><i class="fa-solid fa-chart-simple"></i><span> Statisztikák</span></a>
+            <a href="<?php echo(BASE_URL . "profil"); ?>"><i class="fa-solid fa-user"></i><span> Profilom</span></a>
             <a href="<?php echo(BASE_URL . "logout"); ?>"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
         </div>
     </div>

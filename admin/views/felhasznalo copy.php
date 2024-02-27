@@ -45,17 +45,17 @@
         <div class="operations">
             <?php 
                 $requiredPermissions = array("ALL");
+
                 if(CheckUserPermissions($requiredPermissions) && !$user['basic']['valid_email']){
-                    echo('<button type="button" onclick="ConfirmEmail()" id="confirmEmail">Email megerősítése</button>');
+                    echo('<button type="button" onclick="ConfirmEmail()">Email megerősítése</button>');
                 }
 
-                
                 if(!$user['basic']['valid_email']){
-                    echo('<button type="button" onclick="SendNewEmailCode()" id="sendNewEmailCode">Email megerősító kód küldése</button>');
+                    echo('<button type="button" onclick="SendNewEmailCode()">Email megerősító kód küldése</button>');
                 }
             ?>
-            <button type="button" onclick="SendNewPasswordEmail()" id="newPassword">Új jelszó küldése</button>
-            <button type="button" onclick="SaveChanges()" id="saveChanges">Mentés</button>
+            <button type="button" onclick="SendNewPassword()">Új jelszó küldése</button>
+            <button type="button" onclick="SaveChanges()">Mentés</button>
         </div>
 
         <div class="user-info">
@@ -112,7 +112,7 @@
 
 
             <h2>Tevékenységnapló</h2>
-            <div class="log-content" id="logs"> 
+            <div class="log-content"> 
                 <?php
                     if($user['logs'] != false){
                         foreach($user['logs'] as $log){
@@ -127,8 +127,6 @@
             
         </div>
     </main>
-
-    <div class="message-popup-container" id="message-popup-container">
 
     <script>
         originalUserData = <?php echo(json_encode($user['basic'])) ?>;

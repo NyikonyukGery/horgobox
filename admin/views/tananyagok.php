@@ -34,7 +34,7 @@
         </div>
 
         <div>
-            <table>
+            <table class="boxes">
                 <thead>
                     <tr>
                         <td>#</td>
@@ -48,7 +48,7 @@
                         $counter = 1;
                         foreach($boxes as $box){
                             echo("
-                                <tr onclick='location.href=" . BASE_URL . "box?id=" . $box['id'] . "'>
+                                <tr onclick='location.href= \"" . BASE_URL . "box?id=" . $box['id'] . "\"'>
                                     <td>$counter</td>
                                     <td><img src='" . ASSETS_URL . "images" . $box['image_url'] . "' alt='" . $box['image_title'] . "'></td>
                                     <td>" . $box['name'] . "</td>

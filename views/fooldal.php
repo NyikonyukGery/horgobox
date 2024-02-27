@@ -42,7 +42,7 @@
                 if($unlockedBoxes != false){
                     foreach($unlockedBoxes as $box){
                         echo('
-                            <div class="pattern">
+                            <div class="pattern" onclick="location.href=\'' . BASE_URL . 'boxok' . $box['box_url'] . '\'">
                                 <div class="img-container">
                                     <img src="' . BASE_URL . 'assets/images' .$box['image_url'] . '" alt="' . $box['image_title'] . '">
                                 </div>
@@ -71,7 +71,7 @@
                 if($lockedBoxes != false){
                     foreach($lockedBoxes as $box){
                         echo('
-                            <div class="pattern">
+                            <div class="pattern" onclick="location.href=\'' . BASE_URL . 'aktivalas' . $box['box_url'] . '\'">
                                 <div class="img-container">
                                     <img src="' . BASE_URL . 'assets/images' .$box['image_url'] . '" alt="' . $box['image_title'] . '">
                                 </div>

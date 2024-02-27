@@ -42,7 +42,7 @@ if(isset($_SESSION['adminLogin']) || isset($_SESSION['userId'])){
                     <h3>Bejelentkezés</h3>
                 </div>
                 <div>
-                    <input type="email" name="email" id="email" placeholder="Email cím">
+                    <input type="text" name="email" id="email" placeholder="Email/felhasználónév">
                 </div>
                 <div>
                     <input type="password" name="password" id="password" placeholder="Jelszó">
@@ -67,18 +67,18 @@ if(isset($_SESSION['adminLogin']) || isset($_SESSION['userId'])){
     </main>
 
     <?php 
-    if(!isset($_COOKIE['HIDELOGINPOPUP'])){
-        echo('
-            <div class="popup-container" id="popup-container">
-                <div class="popup">
-                    <h1>FIGYELEM!</h1>
-                    <p>A belépéshez külön regisztráció szükséges! Kérjük amennyiben nem tette még, regisztráljon!<br>Köszönjük megértését!</p>
-                    <button type="button" onclick="HidePopup()" class="top-right">X</button>
-                    <button type="button" onclick="HidePopupForever()">Nem szeretném többet látni</button>
-                </div>
-            </div>
-        ');
-    }
+    // if(!isset($_COOKIE['HIDELOGINPOPUP'])){
+    //     echo('
+    //         <div class="popup-container" id="popup-container">
+    //             <div class="warning-popup">
+    //                 <h1>FIGYELEM!</h1>
+    //                 <p>A belépéshez külön regisztráció szükséges! Kérjük amennyiben nem tette még, regisztráljon!<br>Köszönjük megértését!</p>
+    //                 <button type="button" onclick="HidePopup()" class="top-right">X</button>
+    //                 <button type="button" onclick="HidePopupForever()">Nem szeretném többet látni</button>
+    //             </div>
+    //         </div>
+    //     ');
+    // }
     ?>
 
     <script src="<?php echo(BASE_URL); ?>/assets/scripts/authorization.js"></script>

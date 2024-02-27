@@ -493,7 +493,7 @@ div.title {
     justify-content: center;
 }
 
-.popup {
+.warning-popup {
     max-width: 500px;
     position: relative;
     margin: 20px;
@@ -502,18 +502,18 @@ div.title {
     padding: 20px;
 }
 
-.popup h1 {
+.warning-popup h1 {
     text-align: center;
     margin-bottom: 10px;
 }
 
-.popup p {
+.warning-popup p {
     text-wrap: balance;
     text-align: center;
     margin-bottom: 30px;
 }
 
-.popup button.top-right {
+.warning-popup button.top-right {
     position: absolute;
     top: 10px;
     right: 15px;
@@ -525,11 +525,11 @@ div.title {
     transition: color 150ms ease;
 }
 
-.popup button.top-right:hover {
+.warning-popup button.top-right:hover {
     color: var(--primary-color);
 }
 
-.popup button:not(.top-right) {
+.warning-popup button:not(.top-right) {
     background-color: var(--secondary-color);
     border: 2px solid var(--primary-color);
     border-radius: var(--border-radius);

@@ -51,14 +51,14 @@ function CheckUserPermissions($permissions) {
 
 
 //felhaszáló ellenőrzése és bejelentkeztetése
-function CheckLoginCredentials($email, $password){
+function CheckLoginCredentials($user, $password){
     global $conn;
 
     if(isset($_SESSION['userId'])){
         return json_encode(["response" => "success", "route" => BASE_URL]);
     }
 
-    $query = "SELECT `users`.`id`, `users`.`valid_email` FROM `users` WHERE BINARY `users`.`email` = BINARY '" . $email . "' AND BINARY `users`.`password` = BINARY '" . $password . "'";
+    $query = "SELECT `users`.`id`, `users`.`valid_email` FROM `users` WHERE (BINARY `users`.`email` = BINARY '" . $user . "' AND BINARY `users`.`password` = BINARY '" . $password . "') OR (BINARY `users`.`username` = BINARY '" . $user . "' AND BINARY `users`.`password` = BINARY '" . $password . "')";
     $response = $conn->query($query);
     if($response->num_rows == 1){
         $record = $response->fetch_assoc();
@@ -268,10 +268,13 @@ function UpdateUserData($familyName, $firstName, $username, $password){
 
     $userId = $_SESSION["userId"];
 
-    $query = "SELECT `users`.`id` FROM `users` WHERE `users`.`username` = '$username'";
+    $query = "SELECT `users`.`id`, `users`.`password` FROM `users` WHERE `users`.`username` = '$username'";
     $response = $conn->query($query);
     $record = $response->fetch_assoc();
     if(($response->num_rows == 1 && $record["id"] == $userId) || ($response->num_rows == 0)){
+        if($password == null){
+            $password = $record['password'];
+        }
         $query = "UPDATE `users` SET `familyName` = '$familyName', `firstName` = '$firstName', `username` = '$username', `password` = '$password' WHERE `users`.`id` = $userId";
         if($conn->query($query)){
             $query = "SELECT `users`.`familyName`, `users`.`firstName`, `users`.`username`, `users`.`email`, `users`.`newsletter_sub` FROM `users` WHERE `users`.`id` = $userId";

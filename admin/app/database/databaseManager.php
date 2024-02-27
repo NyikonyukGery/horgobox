@@ -4,8 +4,24 @@
 
 require_once(dirname(__DIR__, 2) . "/setup.php");
 require_once(ROOT_PATH . "/app/database/connect.php");
-// require_once(ROOT_PATH . "/app/endpoints/mailer.php");
-// require_once(ROOT_PATH . "/app/includes/mailGenerator.php");
+require_once(ROOT_PATH . "/app/endpoints/mailer.php");
+require_once(ROOT_PATH . "/app/includes/mailGenerator.php");
+
+
+//fordítási tömbök
+$logsTranslation = array(
+    "sendForgotPasswordEmail" => "Elfelejtett jelszó email küldése",
+    "updateProfile" => "Felhasználói profil frissítve",
+    "registration" => "Regisztráció",
+    "confirmEmail" => "Email megerősítése",
+    "unlockBox" => "Tananyag feloldva",
+    "updateForgotPassword" => "Elfelejtett jelszó frissítve",
+    "adminUpdateProfile" => "Az adminisztrátor frissítette a felhasználó adatait",
+    "adminSendForgotPasswordEmail" => "Az adminisztrátor új jelszó emailt küldött",
+    "adminNewsletterUpdate" => "Az adminisztrátor frissítette a hírlevél állapotát",
+    "adminValidateEmail" => "Az adminisztrátor jóváhagyta az email címet",
+    "adminSendEmailCode" => "Az adminisztrátor új email megerősító kódot küldött"
+);
 
 
 //felhasználói jogosultságok ellenőrzése
@@ -42,6 +58,17 @@ function CheckUserPermissions($permissions) {
             
         }
     } 
+    return true;
+}
+
+
+//Régebbi azonosítókódok törlése
+function RemoveOlderValidationCodes(){
+    global $conn;
+
+    //törlés
+    $query = "DELETE FROM `validation_codes` WHERE (`validation_codes`.`sentTime` < (NOW() - INTERVAL 3 DAY) AND `validation_codes`.`type` = 'email') OR (`validation_codes`.`sentTime` < (NOW() - INTERVAL 1 DAY) AND `validation_codes`.`type` = 'email')";
+    $conn->query($query);
 }
 
 
@@ -66,7 +93,7 @@ function CheckLoginCredentials($email, $password){
 }
 
 
-//jelszó visszaállítása - email küldése
+//jelszó visszaállítása - email küldése (admin)
 function ResetPassword($email){
     global $conn;
 
@@ -80,6 +107,33 @@ function ResetPassword($email){
         $query = "INSERT INTO `validation_codes` (`user_id`, `validation_data`, `type`) VALUES ($userId, '$token', 'adminPasswordReset')";
         if($conn->query($query)){
             $query = "INSERT INTO `logs` (`user_id`, `type`, `ip`) VALUES ($userId, 'sendAdminForgotPasswordEmail', '" . $_SERVER['REMOTE_ADDR'] . "')";
+            $conn->query($query);
+
+            $body = GenerateForgotPassword($token, $userId);
+            sendMail("no-reply@csipcsiripp.hu", $email, "Elfelejtett jelszó", $body);
+            return json_encode(["response" => "success"]);
+        }  else {
+            return json_encode(["response" => "error", "error_title" => "Generálási hiba!", "error_description" => "Sikertelen link létrehozás!"]);
+        }
+    } else {
+        return json_encode(["response" => "error", "error_title" => "Hibás email!", "error_description" => "A megadott email címmel nem regisztráltak felhasználót!"]);
+    }
+}
+
+//jelszó visszaállítása - email küldése (egyéb felhaszáló)
+function ResetPasswordUser($userId){
+    global $conn;
+
+    $query = "SELECT `users`.`email` FROM `users` WHERE `users`.`id` = $userId";
+    $response = $conn->query($query);
+    
+    if($response->num_rows == 1){
+        $email = $response->fetch_assoc()['email'];
+        $token = "admin" . bin2hex(random_bytes(16));
+        
+        $query = "INSERT INTO `validation_codes` (`user_id`, `validation_data`, `type`) VALUES ($userId, '$token', 'adminPasswordReset')";
+        if($conn->query($query)){
+            $query = "INSERT INTO `logs` (`user_id`, `type`, `ip`) VALUES ($userId, 'adminSendForgotPasswordEmail', '" . $_SERVER['REMOTE_ADDR'] . "')";
             $conn->query($query);
 
             $body = GenerateForgotPassword($token, $userId);
@@ -130,30 +184,33 @@ function GetUserData() {
 
     $userId = $_SESSION["userId"];
 
-    $query = "SELECT `admins`.`familyName`, `admins`.`firstName`, `admins`.`username`, `admins`.`email`, `admins`.`newsletter_sub` FROM `admins` WHERE `admins`.`id` = $userId";
+    $query = "SELECT `admins`.`familyName`, `admins`.`firstName`, `admins`.`username`, `admins`.`email` FROM `admins` WHERE `admins`.`id` = $userId";
     $response = $conn->query($query);
     if($response->num_rows == 1) {
         $record = $response->fetch_assoc();
-        return json_encode(["response" => "success", "user" => ["familyName" => $record["familyName"], "firstName" => $record["firstName"], "username" => $record["username"], "email" => $record["email"], "newsletter" => $record["newsletter_sub"]]]);
+        return json_encode(["response" => "success", "user" => ["familyName" => $record["familyName"], "firstName" => $record["firstName"], "username" => $record["username"], "email" => $record["email"]]]);
     } else {
         return json_encode(["response" => "error", "error_title" => "Azonosítási hiba", "error_description" => "Nincs bejelentkezett felhasználó!"]);
     }
 }
 
 
-//felhasználói profil frissítése
+//felhasználói profil frissítése (admin felhasználó)
 function UpdateUserData($familyName, $firstName, $username, $password){
     global $conn;
 
     $userId = $_SESSION["userId"];
 
-    $query = "SELECT `admins`.`id` FROM `admins` WHERE `admins`.`username` = '$username'";
+    $query = "SELECT `admins`.`id`, `admins`.`password` FROM `admins` WHERE `admins`.`username` = '$username'";
     $response = $conn->query($query);
     $record = $response->fetch_assoc();
     if(($response->num_rows == 1 && $record["id"] == $userId) || ($response->num_rows == 0)){
+        if($password == null){
+            $password = $record['password'];
+        }
         $query = "UPDATE `admins` SET `familyName` = '$familyName', `firstName` = '$firstName', `username` = '$username', `password` = '$password' WHERE `admins`.`id` = $userId";
         if($conn->query($query)){
-            $query = "SELECT `admins`.`familyName`, `admins`.`firstName`, `admins`.`username`, `admins`.`email`, `admins`.`newsletter_sub` FROM `admins` WHERE `admins`.`id` = $userId";
+            $query = "SELECT `admins`.`familyName`, `admins`.`firstName`, `admins`.`username`, `admins`.`email` FROM `admins` WHERE `admins`.`id` = $userId";
             $response = $conn->query($query);
             $record = $response->fetch_assoc();
 
@@ -166,6 +223,41 @@ function UpdateUserData($familyName, $firstName, $username, $password){
         }
     } else {
         return json_encode(["response" => "error", "error_title" => "Létező felhasználónév!", "error_description" => "Ez a felhasználónév már foglalt!"]);
+    }
+
+    return json_encode(["response" => "error","error_title" => "Sikertelen módosítás!", "error_description" => "Sikertelen módosítás!"]);
+}
+
+
+//felhasználói profil frissítése (egyéb felhasználó)
+function UpdateUserDataByAdmin($familyName, $firstName, $username, $email, $id){
+    global $conn;
+
+    $userId = $_SESSION["userId"];
+
+    $query = "SELECT `users`.`id` FROM `users` WHERE `users`.`email` = '$email' OR `users`.`username` = '$username'";
+    $response = $conn->query($query);
+    $record = $response->fetch_assoc();
+    if(($response->num_rows == 1 && $record["id"] == $id) || ($response->num_rows == 0)){
+        $query = "UPDATE `users` SET `familyName` = '$familyName', `firstName` = '$firstName', `username` = '$username', `email` = '$email' WHERE `users`.`id` = $id";
+        if($conn->query($query)){
+            $query = "SELECT `users`.`familyName`, `users`.`firstName`, `users`.`username`, `users`.`email` FROM `users` WHERE `users`.`id` = $id";
+            $response = $conn->query($query);
+            $record = $response->fetch_assoc();
+
+            $query = "INSERT INTO `logs` (`user_id`, `type`, `ip`) VALUES ($userId, 'adminUpdateProfile', '" . $_SERVER['REMOTE_ADDR'] . "')";
+            $conn->query($query);
+
+
+            $body = GenerateAdminProfileUpdate();
+            sendMail("no-reply@csipcsiripp.hu", $email, "Felhasználó frissítve", $body);
+
+            return json_encode(["response" => "success",  "user" => ["familyName" => $record["familyName"], "firstName" => $record["firstName"], "username" => $record["username"], "email" => $record["email"]]]);
+        } else {
+            return json_encode(["response" => "error","error_title" => "Módosítási hiba!", "error_description" => "A felhasználót nem sikerült módosítani!"]);
+        }
+    } else {
+        return json_encode(["response" => "error", "error_title" => "Létező adatok!", "error_description" => "A felhasználónév vagy email már foglalt!"]);
     }
 
     return json_encode(["response" => "error","error_title" => "Sikertelen módosítás!", "error_description" => "Sikertelen módosítás!"]);
@@ -196,22 +288,212 @@ function GetStatistics(){
 }
 
 //felhasználók lekérdezése
-function GetUsers(){
+function GetUsers($from){
     global $conn;
 
     $users = array();
 
     //felhasználók lekérése
-    $query = "SELECT `users`.`id`, `users`.`familyName`, `users`.`firstName`, `users`.`username`, `users`.`email`, `users`.`registrationDate` FROM `users`";
+    $query = "SELECT `users`.`id`, `users`.`familyName`, `users`.`firstName`, `users`.`username`, `users`.`email`, `users`.`registrationDate` FROM `users` LIMIT 50 OFFSET $from";
     $response = $conn->query($query);
 
     while($record = $response->fetch_assoc()){
         $users[] = $record;
     }
 
-    return $users;
+    $query = "SELECT COUNT(`users`.`id`) AS 'registeredUsers' FROM `users`";
+    $userCount = $conn->query($query)->fetch_assoc()['registeredUsers'];
+
+    $returnArray = array();
+    $returnArray['users'] = $users;
+    $returnArray['userCount'] = $userCount;
+
+    return $returnArray;
 }
 
+
+//keresés a felhasználók között
+function SearchUsers($from, $phrase){
+    global $conn;
+
+    $users = array();
+
+    //keresett felhaszálók lekérdezése
+    $query = "SELECT `users`.`id`, `users`.`familyName`, `users`.`firstName`, `users`.`username`, `users`.`email`, `users`.`registrationDate` FROM `users` WHERE CONCAT_WS('', `users`.`familyName`, `users`.`firstName`, `users`.`username`, `users`.`email`) LIKE '%$phrase%' LIMIT 50 OFFSET $from";
+    $response = $conn->query($query);
+
+    while($record = $response->fetch_assoc()){
+        $users[] = $record;
+    }
+
+    $query = "SELECT COUNT(`users`.`id`) AS 'foundUsers' FROM `users` WHERE CONCAT_WS('', `users`.`familyName`, `users`.`firstName`, `users`.`username`, `users`.`email`) LIKE '%$phrase%'";
+    $userCount = $conn->query($query)->fetch_assoc()['foundUsers'];
+
+    $returnArray = array();
+    $returnArray['users'] = $users;
+    $returnArray['userCount'] = $userCount;
+
+    return $returnArray;
+}
+
+
+//adott felhasználó adatainak lekérdezése
+function GetUser($id){
+    global $conn, $logsTranslation;
+
+    $user = array();
+
+    //alapadatok lekérdezése
+    $query = "SELECT `users`.`valid_email`, `users`.`familyName`, `users`.`firstName`, `users`.`username`, `users`.`email`, `users`.`registrationDate`, `users`.`newsletter_sub` FROM `users` WHERE `users`.`id` = $id";
+    $response = $conn->query($query);
+
+    if($response->num_rows != 0){
+        $user['basic'] = $response->fetch_assoc();
+
+        //feloldott tananyagok lekérdezése
+        $query = "SELECT `boxes`.`name` FROM `boxes` INNER JOIN `box_user` ON `boxes`.`id` = `box_user`.`box_id` WHERE `box_user`.`user_id` = $id";
+        $response = $conn->query($query);
+
+        if($response->num_rows != 0){
+            $boxes = array();
+            while($record = $response->fetch_assoc()){
+                $boxes[] = $record['name'];
+            }
+            $user['boxes'] = $boxes;
+        } else {
+            $user['boxes'] = false;
+        }
+
+        //naplóbejegyzések lekérdezése
+        $query = "SELECT `logs`.`type`, `logs`.`ip`, `logs`.`timestamp` FROM `logs` WHERE `logs`.`user_id` = $id ORDER BY `logs`.`timestamp` DESC";
+        $response = $conn->query($query);
+
+        if($response->num_rows != 0){
+            $logs = array();
+            while($record = $response->fetch_assoc()){
+                if(array_key_exists($record['type'], $logsTranslation)){
+                    $record['type'] = $logsTranslation[$record['type']];
+                }
+                $logs[] = $record;
+            }
+            $user['logs'] = $logs;
+        } else {
+            $user['logs'] = false;
+        }
+        
+        //felhasználó visszaküldése
+        return $user;
+    } else {
+        return false;
+    }
+}
+
+
+//felhasználó hírlevélstátuszának módosítása
+function ToggleNewsletterSub($userId, $newStatus){
+    global $conn;
+
+    //frissítés sql
+    $query = "UPDATE `users` SET `users`.`newsletter_sub` = $newStatus WHERE `users`.`id` = $userId";
+    if($conn->query($query)){
+        //log bejegyzés létrehozása
+        $query = "INSERT INTO `logs` (`user_id`, `type`, `ip`) VALUES ($userId, 'adminNewsletterUpdate', '" . $_SERVER['REMOTE_ADDR'] . "')";
+        $conn->query($query);
+
+        $query = "SELECT `users`.`email` FROM `users` WHERE `users`.`id` = $userId";
+        $email = $conn->query($query)->fetch_assoc()['email'];
+
+        $body = GenerateToggleNewsletter($newStatus);
+        sendMail("no-reply@csipcsiripp.hu", $email, "Hírlevélállapot változás", $body);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function GetUserLogs($userId){
+    global $conn, $logsTranslation;
+
+    $logs = array();
+
+    //naplóbejegyzések lekérdezése
+    $query = "SELECT `logs`.`type`, `logs`.`ip`, `logs`.`timestamp` FROM `logs` WHERE `logs`.`user_id` = $userId ORDER BY `logs`.`timestamp` DESC";
+    $response = $conn->query($query);
+
+    if($response->num_rows != 0){
+        while($record = $response->fetch_assoc()){
+            if(array_key_exists($record['type'], $logsTranslation)){
+                $record['type'] = $logsTranslation[$record['type']];
+            }
+            $logs[] = $record;
+        }
+    } else {
+        $logs = false;
+    }
+    
+    //felhasználó visszaküldése
+    return $logs;
+}
+
+
+//admin jóváhagyja a felhasználó emial címét
+function ValidateUserEmail($userId){
+    global $conn;
+
+    //email validálása
+    $query = "UPDATE `users` SET `users`.`valid_email` = true WHERE `users`.`id` = $userId";
+    if($conn->query($query)){
+        //naplóbejegyzés beírása
+        $query = "INSERT INTO `logs` (`user_id`, `type`, `ip`) VALUES ($userId, 'adminValidateEmail', '" . $_SERVER["REMOTE_ADDR"] . "')";
+        $conn->query($query);
+
+        $query = "DELETE FROM `validation_codes` where (`validation_codes`.`user_id` = $userId AND `validation_codes`.`type` = 'email')";
+        $conn->query($query);
+        RemoveOlderValidationCodes();
+
+        $query = "SELECT `users`.`email` FROM `users` WHERE `users`.`id` = $userId";
+        $email = $conn->query($query)->fetch_assoc()['email'];
+
+        $body = GenerateAdminValidateUserEmail();
+        sendMail("no-reply@csipcsiripp.hu", $email, "Email megerősítve", $body);
+
+        return true;
+    } else{
+        return false;
+    }
+
+}
+
+
+//email ellenőrző kód újraküldése
+function SendNewEmailCode($userId){
+    global $conn;
+
+    //naplóbejegyzés beírása
+    $query = "INSERT INTO `logs` (`user_id`, `type`, `ip`) VALUES ($userId, 'adminSendEmailCode', '" . $_SERVER["REMOTE_ADDR"] . "')";
+    $conn->query($query);
+
+    $query = "DELETE FROM `validation_codes` where (`validation_codes`.`user_id` = $userId AND `validation_codes`.`type` = 'email')";
+    $conn->query($query);
+    RemoveOlderValidationCodes();
+
+    //új kód beillesztése
+    $code = str_pad(random_int(1, 999999), 6, '0', STR_PAD_LEFT);
+
+    $query = "INSERT INTO `validation_codes` (`user_id`, `validation_data`, `type`) VALUES (" . $_SESSION['userId'] .", '$code', 'email')";
+    $conn->query($query);
+    
+    //email kiválasztása
+    $query = "SELECT `users`.`email` FROM `users` WHERE `users`.`id` = $userId";
+    $email = $conn->query($query)->fetch_assoc()['email'];    
+    
+    $body = GenerateEmailVerification($code);
+    sendMail("no-reply@csipcsiripp.hu", $email, "Email megerősító kód", $body);
+    return true;
+}
+
+
+//dobozok adatainak lekérése
 function GetBoxes(){
     global $conn;
     

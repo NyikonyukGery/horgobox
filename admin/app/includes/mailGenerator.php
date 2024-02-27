@@ -89,7 +89,7 @@ function GenerateForgotPasswordSuccess(){
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.5">
-        <title>Email megerősítő kód</title>
+        <title>Sikeres jelszóváltoztatás</title>
 
         <style>
             *{
@@ -211,6 +211,216 @@ function GenerateEmailVerification($code){
             <tr></tr>
             <tr class="primary-background footer">
                 <td><h3>Köszönöm a regisztrációd! - Bazsi</h3></td>
+            </tr>
+        </table>
+    </body>
+    </html>
+    ';
+    
+    return $message;
+}
+
+function GenerateToggleNewsletter($newStatus){
+    if($newStatus == 0){
+        $status = "Leiratkozva";
+    } else {
+        $status = "Feliratkozva";
+    }
+    $message = '
+    <!DOCTYPE html>
+    <html lang="hu">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.5">
+        <title>Hírlevél állapotváltozás</title>
+
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                color: black;
+            }
+            table{
+                border: 5px solid #f4c430;
+                border-collapse: collapse;
+                width: 100%;
+                max-width: 650px;
+            }
+            td{
+                padding: 0 10px;
+            }
+            h2{
+                text-align: center;
+                padding: 10px 0;
+            }
+            .primary-background{
+                background-color: #f4c430;
+            }
+            .logo{
+                height: 80px;
+                width: auto;
+                padding: 5px 0;
+            }
+            .footer{
+                padding: 10px 0;
+                text-align: center;
+            }
+            .footer>td>h3{
+                padding: 10px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <table align="center">
+            <tr class="primary-background">
+                <td><img src="' . BASE_URL . '/assets/images/static/csipcsiripp_logo.png" alt="csipcsiripp_logo" class="logo"></td>
+            </tr>
+            <tr>
+                <td><h1>Sikeres hírlevélállapot-változás</h1></td>
+            </tr>
+            <tr><td><h2>A hírlevélállapota megváltozott!</h2></td></tr>
+            <tr><td>Az adminisztrátor átállította az állapotát a következőre: ' . $status . '</td></tr>
+            <tr class="primary-background footer">
+                <td><h3>Horgobox</h3></td>
+            </tr>
+        </table>
+    </body>
+    </html>
+    ';
+    
+    return $message;
+}
+
+function GenerateAdminProfileUpdate(){
+    $message = '
+    <!DOCTYPE html>
+    <html lang="hu">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.5">
+        <title>Profil változás</title>
+
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                color: black;
+            }
+            table{
+                border: 5px solid #f4c430;
+                border-collapse: collapse;
+                width: 100%;
+                max-width: 650px;
+            }
+            td{
+                padding: 0 10px;
+            }
+            h2{
+                text-align: center;
+                padding: 10px 0;
+            }
+            .primary-background{
+                background-color: #f4c430;
+            }
+            .logo{
+                height: 80px;
+                width: auto;
+                padding: 5px 0;
+            }
+            .footer{
+                padding: 10px 0;
+                text-align: center;
+            }
+            .footer>td>h3{
+                padding: 10px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <table align="center">
+            <tr class="primary-background">
+                <td><img src="' . BASE_URL . '/assets/images/static/csipcsiripp_logo.png" alt="csipcsiripp_logo" class="logo"></td>
+            </tr>
+            <tr>
+                <td><h1>Sikeres profilváltoztatás</h1></td>
+            </tr>
+            <tr><td><h2>Profiljának adatai frissültek</h2></td></tr>
+            <tr><td>Az adminisztrátor elvégezte a kért módosításokat az adatain!</td></tr>
+            <tr class="primary-background footer">
+                <td><h3>Horgobox</h3></td>
+            </tr>
+        </table>
+    </body>
+    </html>
+    ';
+    
+    return $message;
+}
+
+function GenerateAdminValidateUserEmail(){
+    $message = '
+    <!DOCTYPE html>
+    <html lang="hu">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.5">
+        <title>Email megerősítve</title>
+
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                color: black;
+            }
+            table{
+                border: 5px solid #f4c430;
+                border-collapse: collapse;
+                width: 100%;
+                max-width: 650px;
+            }
+            td{
+                padding: 0 10px;
+            }
+            h2{
+                text-align: center;
+                padding: 10px 0;
+            }
+            .primary-background{
+                background-color: #f4c430;
+            }
+            .logo{
+                height: 80px;
+                width: auto;
+                padding: 5px 0;
+            }
+            .footer{
+                padding: 10px 0;
+                text-align: center;
+            }
+            .footer>td>h3{
+                padding: 10px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <table align="center">
+            <tr class="primary-background">
+                <td><img src="' . BASE_URL . '/assets/images/static/csipcsiripp_logo.png" alt="csipcsiripp_logo" class="logo"></td>
+            </tr>
+            <tr>
+                <td>
+                <h1>Email cím megerősítve</h1>
+                </td>
+            </tr>
+            <tr>
+                <p>Az adminisztrátor megerősítette email címét!</p>
+            </tr>
+            <tr></tr>
+            <tr class="primary-background footer">
+                <td><h3>Horgobox</h3></td>
             </tr>
         </table>
     </body>

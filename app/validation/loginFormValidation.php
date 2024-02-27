@@ -8,8 +8,8 @@ if(!IS_AJAX && !strpos($_SERVER['HTTP_REFERER'],getenv('HTTP_HOST'))) {
     require_once("../../setup.php");
     $jsonData = json_decode(file_get_contents('php://input'));
     if($jsonData->method == "login"){
-        if(!filter_var($jsonData->user->email, FILTER_VALIDATE_EMAIL) || strlen($jsonData->user->password) < 8){
-            $error = ["response" => "error", "error" => "Hibás email cím vagy jelszó!"];
+        if(strlen($jsonData->user->email) < 5 || strlen($jsonData->user->password) < 8){
+            $error = ["response" => "error", "error" => "Hibás email cím/felhaszálónév vagy jelszó!"];
             echo(json_encode($error));
             return;
         } else {
@@ -20,7 +20,7 @@ if(!IS_AJAX && !strpos($_SERVER['HTTP_REFERER'],getenv('HTTP_HOST'))) {
                 echo(json_encode($CheckLoginResponse));
                 return;
             } else{
-                echo(json_encode(["response" => "error", "error" => "Hibás email cím vagy jelszó!"]));
+                echo(json_encode(["response" => "error", "error" => "Hibás email cím/felhasználónév vagy jelszó!"]));
                 return;
             }
         }

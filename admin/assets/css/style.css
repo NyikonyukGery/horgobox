@@ -8,6 +8,9 @@
     --box-shadow-color: #00000050;
     --error-color: #f43030;
     --success-color: #5bf430;
+    --grey-highlight: #0000001c;
+    --dark-button-color: #2e2e2e;
+    --light-button-color: #c4c4c4;
     --heading-font-family: 'Inter', sans-serif;
     --paragraph-font-family: 'Archivo', sans-serif;
     --border-radius: 7px;
@@ -136,50 +139,281 @@ main>div>h1 {
     margin-bottom: 20px;
 }
 
-
-/* patterns page style */
-
-.patterns-container {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 30px;
-    grid-auto-rows: auto;
-    margin-bottom: 50px;
+table {
+    border-collapse: collapse;
 }
 
-.pattern {
-    display: flex;
-    flex-direction: column;
+table thead {
+    font-family: var(--heading-font-family);
+}
+
+table tbody {
+    font-family: var(--paragraph-font-family);
+}
+
+
+/* Filters and select-page */
+
+.filters {
     width: 100%;
+}
+
+.filters input#search {
+    font-size: 1rem;
+    padding: 5px;
+    width: 300px;
+    margin-right: 10px;
+}
+
+.filters button {
+    font-size: 1rem;
+    background-color: var(--dark-button-color);
+    color: var(--secondary-color);
+    border: none;
+    padding: 7px 10px;
+    cursor: pointer;
+}
+
+.select-page {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0;
+    font-size: 1.5rem;
+}
+
+.select-page button.text-like {
+    background-color: transparent;
+    border: none;
+    font-size: inherit;
+    cursor: pointer;
+}
+
+.select-page button.text-like.inactive {
+    color: var(--light-button-color);
+    cursor: not-allowed;
+}
+
+.select-page .pages {
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+}
+
+.select-page .pages p {
+    background-color: var(--light-button-color);
+    padding: 5px 7px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.select-page .pages p.selected {
+    background-color: var(--dark-button-color);
+    color: var(--secondary-color);
+    cursor: unset;
+}
+
+.operations {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    gap: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--extra-color);
+    margin-bottom: 20px;
+}
+
+.operations button {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: var(--font-color);
+    border: none;
     border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: 1px 2px 10px var(--box-shadow-color);
-    aspect-ratio: 3/4.3;
+    cursor: pointer;
+    transition: all 150ms ease;
+    outline: 2px solid var(--primary-color);
+    outline-offset: -2px;
+}
+
+.operations button:hover {
     background-color: var(--secondary-color);
 }
 
-.pattern .img-container {
+
+/* patterns page style */
+
+table.boxes {
     width: 100%;
 }
 
-.pattern .img-container img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
+table.boxes thead {
+    background-color: var(--primary-color);
+    margin-bottom: 20px;
 }
 
-.pattern .description {
+table.boxes thead tr td {
+    font-weight: bold;
+    padding: 10px;
+}
+
+table.boxes thead tr td:not(:first-of-type) {
+    border-left: 2px solid var(--secondary-color)
+}
+
+table.boxes tbody tr {
+    border-bottom: 1px solid var(--extra-color);
+    cursor: pointer;
+}
+
+table.boxes tbody tr:hover {
+    background-color: var(--grey-highlight);
+}
+
+table.boxes thead tr td:nth-of-type(1),
+table.boxes tbody tr td:nth-of-type(1) {
+    width: 50px;
+    text-align: center;
+}
+
+table.boxes tbody tr td:nth-of-type(2) {
+    padding-top: 4px;
+    width: 120px;
+    aspect-ratio: 1/1;
+}
+
+table.boxes tbody tr td:nth-of-type(3) {
+    padding-left: 10px
+}
+
+table.boxes tbody tr td img {
+    width: 100%;
+    height: auto;
+}
+
+
+/* USERS */
+
+table.users {
+    width: 100%;
+}
+
+table.users thead {
+    background-color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+table.users thead tr td {
+    font-weight: bold;
+    padding: 10px;
+}
+
+table.users thead tr td:not(:first-of-type) {
+    border-left: 2px solid var(--secondary-color)
+}
+
+table.users tbody tr {
+    border-bottom: 1px solid var(--extra-color);
+    cursor: pointer;
+}
+
+table.users tbody tr:hover {
+    background-color: var(--grey-highlight);
+}
+
+table.users thead tr td:nth-of-type(1),
+table.users tbody tr td:nth-of-type(1) {
+    width: 50px;
+    text-align: center;
+}
+
+table.users tbody tr td {
+    padding: 15px 0;
+}
+
+table.users tbody tr td:not(:first-of-type) {
+    padding-left: 10px
+}
+
+
+/* USER */
+
+.user-info h2 {
+    margin: 20px 0 0;
+}
+
+.user-info,
+.user-info .basic {
     display: flex;
-    height: 100%;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 15px;
+    gap: 20px;
 }
 
-.pattern .description a.btn {
+.user-info .basic .row {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.user-info .basic>div {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.user-info .basic div p,
+.user-info .basic div>div p {
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+}
+
+.user-info .basic div>div input {
+    padding: 5px 10px;
+    font-size: 1rem;
+    width: 30ch;
+}
+
+.user-info .basic div button {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: var(--font-color);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 150ms ease;
+    outline: 2px solid var(--primary-color);
+    outline-offset: -2px;
     width: fit-content;
-    margin: 0 auto;
+}
+
+.user-info .basic div button:hover {
+    background-color: var(--secondary-color);
+}
+
+.user-info .unlocked-patterns p {
+    padding: 10px 20px;
+}
+
+.user-info .unlocked-patterns p:not(:last-of-type) {
+    border-bottom: 1px solid var(--extra-color);
+}
+
+.user-info .log-content {
+    max-height: 200px;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}
+
+.user-info .log-content p {
+    padding: 10px 20px;
+}
+
+.user-info .log-content p:not(:last-of-type) {
+    border-bottom: 1px solid var(--extra-color);
+}
+
+.user-info .log-content p:hover {
+    background-color: var(--grey-highlight);
 }
 
 
@@ -345,6 +579,7 @@ main.bottom-right {
     top: 120px;
     width: 300px;
     height: fit-content;
+    background-color: var(--secondary-color);
 }
 
 .message-popup-container.white .popup {
@@ -441,64 +676,7 @@ section h2 {
 }
 
 
-/* BOXOK */
-
-div.title {
-    margin-bottom: 30px;
-    font-size: 110%;
-}
-
-.videos-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: auto;
-    column-gap: 20px;
-    row-gap: 40px;
-    margin-bottom: 50px;
-}
-
-.videos-container .video iframe {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16/9;
-}
-
-.offline-resources {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-auto-rows: auto;
-    width: fit-content;
-    gap: 20px;
-}
-
-.offline-resources .offline-resource a {
-    display: block;
-}
-
-
 /* RESPONSIVE STYLE */
-
-
-/* 
-FONTOS 
- - CSAK 3 BOX JELENIK MEG 4 HELYETT ÁTMENETILEG
-*/
-
-
-/* 
-RESZPONZÍV OLDALAK 
- - FŐOLDAL
- - NAVIGÁCIÓ
- - PROFIL
- - BEJELENTKEZÉS
- - REGISZTRÁCIÓ
- - BOX
- - 404
- 
-
-KELL MÉG
- - AKTIVÁLÁS
-*/
 
 @media only screen and (width <=1300px) {
     nav {
@@ -507,51 +685,9 @@ KELL MÉG
     main {
         padding: 0 20px;
     }
-    .pattern {
-        aspect-ratio: 3/4.4;
-    }
-}
-
-@media only screen and (width <=1100px) {
-    .patterns-container {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    .pattern {
-        aspect-ratio: 3/4.3;
-    }
-}
-
-@media only screen and (width <=900px) {
-    .patterns-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .pattern {
-        aspect-ratio: 3/4;
-    }
-}
-
-@media only screen and (width <=750px) {
-    .pattern {
-        aspect-ratio: 3/4.2;
-    }
-    .videos-container {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media only screen and (width <=650px) {
-    .pattern {
-        aspect-ratio: 3/4.4;
-    }
 }
 
 @media only screen and (width <=600px) {
-    .patterns-container {
-        grid-template-columns: 1fr;
-    }
-    .pattern {
-        aspect-ratio: 3/4;
-    }
     nav div.link-container {
         gap: 30px;
     }

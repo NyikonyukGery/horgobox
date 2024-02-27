@@ -20,9 +20,6 @@ function loadUser() {
             document.getElementById("firstName").value = jsonResponse.user.firstName;
             document.getElementById("username").value = jsonResponse.user.username;
             document.getElementById("email").innerText = jsonResponse.user.email;
-            if (jsonResponse.user.newsletter == true) {
-                document.getElementById("newsletter-action-container").innerHTML = "<p>Már feliratkozott!</p>";
-            }
         }
     }
 }
@@ -57,25 +54,5 @@ function UpdateUser() {
         }
     } else {
         ShowPopupMessage("Nincs módosított mező!", "A mezők tartalma nem módosult!")
-    }
-}
-
-function NewsletterSignUp() {
-    var request = new XMLHttpRequest();
-    request.open("POST", "app/endpoints/userData.php");
-    request.setRequestHeader("Content-type", 'application/x-www-form-urlencoded');
-    request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-
-    var sendJson = JSON.stringify({ "method": "newsletterSignUp" });
-    request.send(sendJson);
-
-    request.onload = function() {
-        var jsonResponse = JSON.parse(request.response);
-
-        if (jsonResponse.response == "error") {
-            ShowPopupMessage(jsonResponse.error_title, jsonResponse.error_description)
-        } else if (jsonResponse.response == "success") {
-            document.getElementById("newsletter-action-container").innerHTML = "<p>Sikeresen feliratkozott!</p>";
-        }
     }
 }

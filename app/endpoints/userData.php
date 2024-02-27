@@ -59,7 +59,11 @@ if(!IS_AJAX && !strpos($_SERVER['HTTP_REFERER'],getenv('HTTP_HOST'))) {
             $familyName = htmlspecialchars($jsonData->user->familyName);
             $firstName = htmlspecialchars($jsonData->user->firstName);
             $username = htmlspecialchars($jsonData->user->username);
-            $password = hash("sha256", htmlspecialchars($password));     
+            if(strlen($password) == 0){
+                $password = null;
+            } else{
+                $password = hash("sha256", htmlspecialchars($password));
+            }  
             echo(UpdateUserData($familyName, $firstName, $username, $password));
             return;
         } else {

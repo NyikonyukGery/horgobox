@@ -7,7 +7,7 @@
     $requiredPermissions = array("ACCESS_USERS");
     CheckUserPermissions($requiredPermissions);
 
-    $users = GetUsers();
+    $users = GetUsers(0, 50);
 ?>
 
 <!DOCTYPE html>
@@ -30,11 +30,25 @@
 
     <main>
         <div>
-            <h1>Vásárlók</h1>
+            <h1>Felhasználók</h1>
+        </div>
+
+        <div class="filters">
+            <div>
+                <input type="text" name="q" id="search" placeholder="Kereső">
+                <button type="button" onclick="SearchUsers()"><i class="fa-solid fa-magnifying-glass"></i> Keresés</button>
+            </div>
+        </div>
+
+        <div class="select-page">
+            <button class="text-like" id="left-arrow"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="pages" id="pages">
+            </div>
+            <button class="text-like" id="right-arrow"><i class="fa-solid fa-arrow-right"></i></button>
         </div>
 
         <div>
-            <table>
+            <table class="users">
                 <thead>
                     <tr>
                         <td>#</td>
@@ -44,34 +58,13 @@
                         <td>Regisztráció</td>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php 
-                        $counter = 1;
-                        foreach($users as $user){
-                            echo("
-                                <tr onclick='location.href=" . BASE_URL . "vasarlo?id=" . $user['id'] . "'>
-                                    <td>$counter</td>
-                                    <td>" . $user['familyName'] . " " . $user['firstName'] . "</td>
-                                    <td>" . $user['username'] . "</td>
-                                    <td>" . $user['email'] . "</td>
-                                    <td>" . $user['registrationDate'] . "</td>
-                                </tr>
-                            ");
-                            $counter++;
-                        }
-                    ?>
+                <tbody id="users">
                 </tbody>
             </table>
         </div>
-
-        <div>
-            
-        </div>
-
-        <div>
-
-        </div>
     </main>
+
+    <script src="<?php echo(BASE_URL); ?>/assets/scripts/users.js"></script>
 </body>
 
 </html>
